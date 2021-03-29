@@ -1,24 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route } from 'react-router-dom'
+import UsersPage from './Components/Users/UsersPage';
+import CompaniesPage from "./Components/Companies/CompaniesPage";
+import NewsletterPage from './Components/Newsletter/NewsletterPage';
+import { makeStyles, withStyles } from '@material-ui/core';
 
-function App() {
+import { createStyles, ThemeProvider } from '@material-ui/core/styles';
+import Header from './Header';
+import customTheme from './CustomTheme';
+
+// STILOVI ZA DIV CONTAINER
+// const useStyles = makeStyles(customTheme => createStyles({
+
+// ))
+
+
+const App: React.FC = () => {
+  // const classes = useStyles();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ThemeProvider theme={customTheme}>
+
+        <BrowserRouter>
+          <Header />
+          {/* ovde je bio tag <switch> */}
+          <Route path="/" exact component={UsersPage} />
+          <Route path="/companies" exact component={CompaniesPage} />
+          <Route path="/newsletter" exact component={NewsletterPage} />
+
+        </BrowserRouter>
+        {/* <UsersPage /> */}
+
+      </ThemeProvider>
     </div>
   );
 }
