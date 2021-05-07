@@ -8,8 +8,7 @@ import MenuBookIcon from "@material-ui/icons/MenuBook";
 import customTheme from "./CustomTheme";
 import HeaderLink from "./HeaderLink";
 import Tooltip from "@material-ui/core/Tooltip";
-import { WeatherPopup } from "./Weather";
-import { geolocated } from "react-geolocated";
+import Coords from "./Coords";
 
 const Header: React.FC = () => {
   const classes = useStyles();
@@ -53,7 +52,7 @@ const Header: React.FC = () => {
             />
           </Grid>
           <Grid item xs={12} md={2}>
-            <Tooltip title={<WeatherPopup />}>
+            <Tooltip title={<Coords />}>
               <div>WEATHER FORECAST</div>
             </Tooltip>
           </Grid>
