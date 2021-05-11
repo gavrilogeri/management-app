@@ -18,8 +18,6 @@ import UsersForm from "./UsersForm";
 import { usersHeaderCells } from "../../helpers";
 import TableRowUser from "../TableRowUser";
 
-// interface Props extends RouteComponentProps { }
-
 const useStyles = makeStyles((customTheme) => ({
   container: {
     margin: customTheme.spacing(5),
@@ -46,7 +44,7 @@ export default function UsersPage() {
     isTriggered: false,
     notificationMessage: "",
     typeOfNotification: "",
-  }); //
+  });
 
   function addOrEdit(user: User, resetForm: () => void) {
     if (user.ID) {

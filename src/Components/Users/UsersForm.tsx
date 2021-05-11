@@ -7,7 +7,6 @@ import DropdownNative from "../formComponents/DropdownNative";
 import * as UserControl from "../UserControl";
 import { User } from "../UserControl";
 
-// import { KeyboardDatePicker } from "@material-ui/pickers";
 interface Props {
   addOrEdit: (user: User, resetForm: () => void) => void;
   editableRecord: User | null;
@@ -28,8 +27,6 @@ export default function UsersForm(props: Props) {
     ID: "",
   };
 
-  //stilovi za Formu
-
   const useStyles = makeStyles((customTheme) => ({
     root: {
       "& .MuiFormControl-root": {
@@ -43,23 +40,17 @@ export default function UsersForm(props: Props) {
     },
   }));
 
-  //useState hook za setovanje vrednosti Usera
   const [values, setValues] = useState<User>(defaultUserValue);
   //useState hook za setovanje greški i validaciju
 
   const [errors, setErrors] = useState<any>({});
-  //klasa za implementiranje stilova
   const classes = useStyles();
 
-  //hendlovanje unosa u TextField
   const handleInputChange = (e: React.ChangeEvent<any>): void => {
-    // const { name, value } = e.target;
-
     setValues({
-      ...values, //putem spread operatora values (podaci o useru) se ovde ubacuju, a setuje im se vrednost iz TextFielda
+      ...values,
       [e.target.name]: e.target.value as string,
     });
-    // live validacija validate(values)
   };
 
   const validate = (formValues: any = values) => {
