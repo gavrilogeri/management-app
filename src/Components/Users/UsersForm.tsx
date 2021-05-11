@@ -1,18 +1,23 @@
 // eslint-disable-next-line
 import { Grid, makeStyles, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 import Button from "../formComponents/Button";
 import Dropdown from "../formComponents/Dropdown";
 import DropdownNative from "../formComponents/DropdownNative";
 import * as UserControl from "../UserControl";
-import { Users } from "../UserControl";
+import { User } from "../UserControl";
 
 // import { KeyboardDatePicker } from "@material-ui/pickers";
-
-export default function UsersForm(props: any) {
+interface Props {
+  addOrEdit: (user: User, resetForm: () => void) => void;
+  editableRecord: User | null;
+  setOpenForm: Dispatch<SetStateAction<boolean>>;
+  setEditableRecord: Dispatch<SetStateAction<User | null>>;
+}
+export default function UsersForm(props: Props) {
   const { addOrEdit, editableRecord, setOpenForm, setEditableRecord } = props;
 
-  const defaultUserValue: Users = {
+  const defaultUserValue: User = {
     firstName: "",
     lastName: "",
     companyID: "",
@@ -39,7 +44,7 @@ export default function UsersForm(props: any) {
   }));
 
   //useState hook za setovanje vrednosti Usera
-  const [values, setValues] = useState<Users>(defaultUserValue);
+  const [values, setValues] = useState<User>(defaultUserValue);
   //useState hook za setovanje greški i validaciju
 
   const [errors, setErrors] = useState<any>({});

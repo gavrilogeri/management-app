@@ -23,7 +23,7 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 // import FormDatePicker from '../formComponents/DatePicker'
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { Companies } from "../UserControl";
+import { Company } from "../UserControl";
 import * as CompaniesPage from "./CompaniesPage";
 import UsersForm from "../Users/UsersForm";
 import UsersPage from "../Users/UsersPage";
@@ -45,7 +45,7 @@ export default function CompaniesForm(props: any) {
 
   const classes = useStyles();
 
-  const defaultCompanyValue: Companies = {
+  const defaultCompanyValue: Company = {
     ID: "",
     name: "",
     users: [],
@@ -70,7 +70,7 @@ export default function CompaniesForm(props: any) {
   };
 
   //useState hook za setovanje vrednosti Usera
-  const [values, setValues] = useState<Companies>(defaultCompanyValue);
+  const [values, setValues] = useState<Company>(defaultCompanyValue);
   //useState hook za setovanje greški i validaciju
   const handleInputChange = (e: React.ChangeEvent<any>): void => {
     setValues({

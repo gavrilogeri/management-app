@@ -10,9 +10,9 @@ import {
   TableRow,
 } from "@material-ui/core";
 import Button from "../formComponents/Button";
-import useTable, { IheaderCells } from "../formComponents/useTable";
+import useTable from "../formComponents/useTable";
 import * as UserControl from "../UserControl";
-import { Companies } from "../UserControl";
+import { Company } from "../UserControl";
 import CompaniesForm from "./CompaniesForm";
 import { Button as MuiButton } from "@material-ui/core";
 import Popup from "../Popup";
@@ -21,6 +21,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import UsersPage from "../Users/UsersPage";
 import AlertNotification from "../formComponents/AlertNotification";
 import { Alert } from "@material-ui/lab";
+import { companiesHeaderCells } from "../../helpers";
 
 // interface Props { }
 
@@ -35,17 +36,12 @@ const useStyles = makeStyles((customTheme) => ({
 }));
 
 export default function CompaniesPage(props: any) {
-  const headerCells: IheaderCells[] = [
-    { id: "Name", label: "Name" },
-    { id: "City", label: "City" },
-    { id: "Country", label: "Country" },
-    { id: "usersNumber", label: "No. of Users" },
-    { id: "actions", label: "Record Action" },
-  ];
-
   const classes = useStyles();
   const [records, setRecords] = useState(UserControl.getAllCompanies()); //Povlacenje podataka o Userima iz LocalStorage
-  const { TableContainer, TableHeader } = useTable(records, headerCells);
+  const { TableContainer, TableHeader } = useTable(
+    records,
+    companiesHeaderCells
+  );
   const [openForm, setOpenForm] = useState(false);
   const [editableRecord, setEditableRecord] = useState(null);
   const [title, setFormTitle] = useState<string>();
@@ -55,7 +51,7 @@ export default function CompaniesPage(props: any) {
     typeOfNotification: "",
   });
 
-  function addOrEdit(company: Companies, resetForm: any) {
+  function addOrEdit(company: Company, resetForm: any) {
     if (company.ID === "") {
       UserControl.insertCompany(company);
       setAlertPopup({
@@ -114,7 +110,7 @@ export default function CompaniesPage(props: any) {
         <TableContainer>
           <TableHeader />
           <TableBody>
-            {records.map((item: Companies) => (
+            {records.map((item: Company) => (
               <TableRow key={item.ID}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.city}</TableCell>

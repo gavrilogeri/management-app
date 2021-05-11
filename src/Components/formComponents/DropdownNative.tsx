@@ -8,7 +8,7 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import React from "react";
-import { getAllCompanies, Companies } from "../UserControl";
+import { getAllCompanies, Company } from "../UserControl";
 import Position from "../Position";
 
 export default function DropdownNative(props: SelectProps) {
@@ -26,7 +26,7 @@ export default function DropdownNative(props: SelectProps) {
     <FormControl {...(error && { error: true })}>
       <InputLabel>{labelId}</InputLabel>
       <Select labelId={labelId} name={name} value={value} onChange={onChange}>
-        {inputProps?.map((item: Companies) => (
+        {inputProps?.map((item: Company) => (
           <MenuItem key={item.ID} value={item.ID}>
             {item.name}
           </MenuItem>

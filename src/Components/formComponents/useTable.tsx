@@ -1,14 +1,17 @@
 import {
+  Button,
   createStyles,
   makeStyles,
   Table,
   TableCell,
   TableHead,
+  TableRow,
 } from "@material-ui/core";
 // import { IheaderCells } from '../Users/UsersPage'
 import React from "react";
-import { Companies, Users } from "../UserControl";
+import { Company, User } from "../UserControl";
 import customTheme from "../../CustomTheme";
+import { IheaderCells } from "../../helpers";
 
 const useStyles = makeStyles((customTheme) => ({
   table: {
@@ -27,13 +30,8 @@ const useStyles = makeStyles((customTheme) => ({
   },
 }));
 
-export interface IheaderCells {
-  id: string;
-  label: string;
-}
-
 export default function useTable(
-  records: Users[] | Companies[],
+  records: User[] | Company[],
   headerCells: IheaderCells[]
 ) {
   const classes = useStyles();
@@ -42,7 +40,7 @@ export default function useTable(
     <Table className={classes.table}>{props.children}</Table>
   );
 
-  const TableHeader = (props: any) => {
+  const TableHeader = () => {
     return (
       <TableHead>
         {headerCells.map((headerCells) => (
@@ -51,6 +49,7 @@ export default function useTable(
       </TableHead>
     );
   };
+
   return {
     TableContainer,
     TableHeader,

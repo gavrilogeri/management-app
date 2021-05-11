@@ -1,7 +1,7 @@
 import Position from "./Position";
 
-export interface Users {
-  ID: string;
+export interface User {
+  ID: string | null;
   firstName: string;
   lastName: string;
   companyID: string;
@@ -11,10 +11,10 @@ export interface Users {
   phoneNumber: string;
 }
 
-export interface Companies {
+export interface Company {
   ID: string;
   name: string;
-  users: Users[];
+  users: User[];
   city: string;
   country: string;
 }
@@ -68,12 +68,12 @@ const keysCompany = {
 //     let companies: Companies[] = JSON.parse(localStorage.getItem(keysCompany.companies) as any);
 //     //TODO
 // }
-export function getAllCompanies(): Companies[] {
+export function getAllCompanies(): Company[] {
   if (localStorage.getItem(keysCompany.companies) == null) {
     localStorage.setItem(keysCompany.companies, JSON.stringify([]));
   }
-  let companies: Companies[] = JSON.parse(
-    localStorage.getItem(keysCompany.companies) as any
+  let companies: Company[] = JSON.parse(
+    localStorage.getItem(keysCompany.companies) as string
   );
   // let userArray = getUsers();
   //niz kompanija ubacen u companies
@@ -99,10 +99,10 @@ function getCompNameByCompID(companyID: string) {
   return companyName;
 }
 
-export function insertUser(data: Users) {
+export function insertUser(data: User) {
   let users = getUsers();
-  data["companyName"] = getCompNameByCompID(data["companyID"]);
-  data["ID"] = uuidv4();
+  data.companyName = getCompNameByCompID(data.companyID);
+  data.ID = uuidv4();
 
   users.push(data);
   localStorage.setItem(keys.users, JSON.stringify(users));
@@ -112,37 +112,42 @@ export function insertUser(data: Users) {
 }
 function getUsersByCompanyID(companyID: string) {
   let allUsers = getUsers();
-  let companyUsers: Users[] = [];
-  allUsers.forEach((element) => {
-    if (element.companyID === companyID) {
-      companyUsers.push(element);
-    }
-  });
+  let companyUsers: User[] = [];
+  // With forEach:
 
+  // allUsers.forEach((element) => {
+  //   if (element.companyID === companyID) {
+  //     companyUsers.push(element);
+  //   }});
+  allUsers
+    .filter((users) => users.companyID === companyID)
+    .map((user) => companyUsers.push(user));
+  //CAN I JUST DO LIKE THIS:
+  // companyUsers = allUsers.filter((users) => users.companyID === companyID);
   return companyUsers;
 }
-export function insertCompany(data: Companies) {
+export function insertCompany(data: Company) {
   let companies = getAllCompanies();
   // let companies = getCompaniesWithUsers();
-  data["ID"] = uuidv4();
-  data["users"] = getUsersByCompanyID(data["ID"]); //treba mi getUsers koji imaju COMPANY ID == DATA ID
+  data.ID = uuidv4();
+  data.users = getUsersByCompanyID(data.ID);
   companies.push(data);
   localStorage.setItem(keysCompany.companies, JSON.stringify(companies));
 }
 
-function addUserToCompany(user: Users) {
+function addUserToCompany(user: User) {
   let company = getCompByCompID(user.companyID);
   company.users.push(user);
   updateCompany(company);
 }
-function updateUserinCompany(user: Users) {
+function updateUserinCompany(user: User) {
   let company = getCompByCompID(user.companyID);
   company.users.push(user);
 
   removeOldUserFromCompany(user);
   updateCompany(company);
 }
-function removeOldUserFromCompany(user: Users) {
+function removeOldUserFromCompany(user: User) {
   let companies = getAllCompanies();
 
   companies.forEach((company) => {
@@ -187,39 +192,42 @@ function uuidv4() {
   });
 }
 
-export function getUsers(): Users[] {
+export function getUsers(): User[] {
   if (localStorage.getItem(keys.users) == null)
     localStorage.setItem(keys.users, JSON.stringify([]));
 
   return JSON.parse(localStorage.getItem(keys.users) as string);
 }
 
-export function updateUser(data: Users) {
-  let company = getCompByCompID(data["companyID"]);
+export function updateUser(data: User) {
+  let company = getCompByCompID(data.companyID);
   let localCompanyName = company.name;
-  let userList: Users[] = getUsers();
+  let userList: User[] = getUsers();
 
-  let recordIndex = userList.findIndex((x) => x.ID == data.ID);
+  // let userForUpdate = userList.find((x) => x.ID === data.ID);
+  // userList[userList.findIndex(userForUpdate)] = { ...data, companyName: localCompanyName };
+
+  let recordIndex = userList.findIndex((x) => x.ID === data.ID);
   //za update usera u company
   userList[recordIndex] = { ...data, companyName: localCompanyName };
   localStorage.setItem(keys.users, JSON.stringify(userList));
   updateUserinCompany(data);
 }
-export function updateCompany(data: Companies) {
-  let companyList: Companies[] = getAllCompanies();
-  let recordIndex = companyList.findIndex((x) => x.ID == data.ID);
-  companyList[recordIndex] = { ...data };
+export function updateCompany(data: Company) {
+  let companyList: Company[] = getAllCompanies();
+  let recordIndex = companyList.findIndex((x) => x.ID === data.ID);
+  companyList[recordIndex] = { ...data, users: getUsersByCompanyID(data.ID) };
   localStorage.setItem(keysCompany.companies, JSON.stringify(companyList));
 }
 
 export function deleteUser(id: string) {
-  let userList: Users[] = getUsers();
-  userList = userList.filter((x) => x.ID != id); //vracanje svih usera osim onog sa datim id (njega zelimo da izbacimo)
+  let userList: User[] = getUsers();
+  userList = userList.filter((x) => x.ID != id);
   localStorage.setItem(keys.users, JSON.stringify(userList));
 }
 
 export function deleteCompany(id: string) {
-  let companyList: Companies[] = getAllCompanies();
+  let companyList: Company[] = getAllCompanies();
   companyList = companyList.filter((x) => x.ID != id);
   localStorage.setItem(keysCompany.companies, JSON.stringify(companyList));
 }
