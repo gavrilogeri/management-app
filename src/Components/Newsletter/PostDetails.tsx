@@ -1,12 +1,11 @@
-import { Grid, makeStyles, Paper, TextField } from "@material-ui/core";
+import { Grid, makeStyles, TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import Button from "../formComponents/Button";
-import { BlogPost } from "./NewsletterPage";
 import CommentCard from "./CommentCard";
+import { BlogPost } from "./NewsletterPage";
+import axios from "axios";
 import Popup from "../Popup";
-import CommentPopup from "./CommentPopup";
-import customTheme from "../../CustomTheme";
 
 const useStyles = makeStyles((customTheme) => ({
   root: {
@@ -37,79 +36,77 @@ export interface Comment {
   body: string;
   email: string;
 }
-export default function PostDetails(props: any) {
-  const { blogTitle, blogBody, setOpenForm, userId, postId, fetchURL } = props;
+export default function PostDetails({
+  blogPost,
+  setOpenForm,
+  fetchURL,
+  setBlogPost,
+}: {
+  blogPost: BlogPost;
+  setOpenForm: any;
+  fetchURL: string;
+  setBlogPost: Dispatch<React.SetStateAction<BlogPost | undefined>>;
+}) {
+  // const  = props;
   const [data, setData] = useState<Comment[]>([]);
+  const [commentData, setCommentData] = useState<Comment>();
   const [openFullComent, setOpenFullComment] = useState<boolean>(false);
-  const [id, setId] = useState<number>();
 
-  const [commentPostId, setCommentPostId] = useState<number>();
-  const [name, setName] = useState<string>();
-  const [body, setBody] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [titleValue, setTitleValue] = useState<string>();
-  const [bodyValue, setBodyValue] = useState<string>();
-
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitleValue(event.target.value);
-  };
-  const handleBodyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBodyValue(event.target.value);
-  };
-  const getData = () =>
-    fetch(`${fetchURL}/${postId}/comments`).then((res) => {
-      return res.json();
+  const handleBlogChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBlogPost({
+      ...blogPost,
+      [event.target.name]: event.target.value as string,
     });
+  };
+
+  async function getData() {
+    try {
+      const res = await axios.get<Comment[]>(
+        `${fetchURL}/${blogPost.id}/comments`
+      );
+      const data = await res.data;
+      setData(data);
+      console.log("Data fetched successfully");
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
 
   useEffect(() => {
-    getData().then((data: Comment[]) => setData(data));
+    getData();
   }, []);
 
-  const deletePost = (postId: number): void => {
-    fetch(`${fetchURL}/${postId}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        console.log("succesfully deleted", res);
-      })
-      .then(() => {
-        setOpenForm(false);
-        alert("POST SUCCESFULLY DELETED");
+  const deletePost = async (postId: number) => {
+    try {
+      const res = await axios.delete(`${fetchURL}/${postId}`, {
+        method: "DELETE",
       });
+      console.log("succesfully deleted", res);
+      setOpenForm(false);
+      alert("POST SUCCESFULLY DELETED");
+    } catch (error) {
+      console.log(error.response);
+    }
   };
-
-  const updatePost = (
-    id: number,
-    title: string,
-    body: string,
-    userId: number
-  ): void => {
-    fetch(`${fetchURL}/${postId}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        id: { id },
-        title: { title },
-        body: { body },
-        userId: { userId },
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json));
-
-    // .then((res) => {
-    //     console.log("succesfully updated", res)
-    // }).then(() => { alert("POST SUCCESFULLY UPDATED") })
+  const updatePost = async (blogUpdated: BlogPost) => {
+    try {
+      const res = await axios.put<BlogPost>(
+        `${fetchURL}/${blogPost?.id}`,
+        blogUpdated,
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const openCommentPopup = (item: Comment) => {
-    setId(item.id);
-    setCommentPostId(item.postId);
-    setName(item.name);
-    setBody(item.body);
-    setEmail(item.email);
+    setCommentData(item);
     setOpenFullComment(true);
   };
 
@@ -126,10 +123,10 @@ export default function PostDetails(props: any) {
               multiline
               fullWidth
               rowsMax={4}
-              // title="title"
-              value={titleValue}
-              defaultValue={blogTitle}
-              onChange={handleTitleChange}
+              name="title"
+              value={blogPost.title}
+              defaultValue={blogPost.title}
+              onChange={handleBlogChange}
               variant="outlined"
             />
           </Grid>
@@ -142,10 +139,10 @@ export default function PostDetails(props: any) {
               fullWidth
               rowsMax={4}
               rows={4}
-              title="body"
-              value={bodyValue}
-              defaultValue={blogBody}
-              onChange={handleBodyChange}
+              name="body"
+              value={blogPost.body}
+              defaultValue={blogPost.body}
+              onChange={handleBlogChange}
               variant="outlined"
             />
           </Grid>
@@ -153,21 +150,14 @@ export default function PostDetails(props: any) {
             <Button
               type="submit"
               text="UPDATE POST"
-              onClick={() =>
-                updatePost(
-                  postId,
-                  titleValue === undefined ? blogTitle : titleValue,
-                  bodyValue === undefined ? blogBody : bodyValue,
-                  userId
-                )
-              }
+              onClick={() => updatePost(blogPost)}
             />
           </Grid>
           <Grid item xs={4}>
             <Button
               text="REMOVE POST"
               color="secondary"
-              onClick={() => deletePost(postId)}
+              onClick={() => deletePost(blogPost.id)}
             />
           </Grid>
           <Grid item xs={4}>
@@ -196,29 +186,21 @@ export default function PostDetails(props: any) {
             >
               <CommentCard
                 onClick={() => openCommentPopup(item)}
-                postId={item.id}
-                name={item.name}
-                body={item.body}
-                email={item.email}
+                comment={item}
                 isFullBody={false}
               />
             </Grid>
           ))}
         </Grid>
-        <CommentPopup
-          openFullComent={openFullComent}
-          setOpenFullComment={setOpenFullComment}
-          title={name}
-        >
-          <CommentCard
-            body={body}
-            email={email}
-            postId={commentPostId}
-            id={id}
-            isFullBody={true}
-            onClick={() => setOpenFullComment(false)}
-          />
-        </CommentPopup>
+        <Popup openForm={openFullComent} title={commentData?.name}>
+          {commentData && (
+            <CommentCard
+              comment={commentData}
+              isFullBody={true}
+              onClick={() => setOpenFullComment(false)}
+            />
+          )}
+        </Popup>
       </form>
     </div>
   );
