@@ -1,22 +1,13 @@
+import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-import UsersPage from "./Components/Users/UsersPage";
 import CompaniesPage from "./Components/Companies/CompaniesPage";
 import NewsletterPage from "./Components/Newsletter/NewsletterPage";
-import { makeStyles, withStyles } from "@material-ui/core";
-
-import { createStyles, ThemeProvider } from "@material-ui/core/styles";
-import Header from "./Header";
+import UsersPage from "./Components/Users/UsersPage";
 import customTheme from "./CustomTheme";
-
-// STILOVI ZA DIV CONTAINER
-// const useStyles = makeStyles(customTheme => createStyles({
-
-// ))
+import Header from "./Header";
 
 const App: React.FC = () => {
-  // const classes = useStyles();
-
   return (
     <div>
       <ThemeProvider theme={customTheme}>

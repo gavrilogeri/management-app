@@ -1,35 +1,25 @@
 // eslint-disable-next-line
-import React, { useState, useEffect, useRef } from "react";
-import { getPositions } from "../UserControl";
-import Position from "../Position";
-import {
-  Grid,
-  makeStyles,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from "@material-ui/core";
-import { TextField } from "@material-ui/core";
-import customTheme from "../../CustomTheme";
-import { StayPrimaryPortraitTwoTone } from "@material-ui/icons";
-import Dropdown from "../formComponents/Dropdown";
+import { Grid, makeStyles, TextField } from "@material-ui/core";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Button from "../formComponents/Button";
 import * as UserControl from "../UserControl";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-// import FormDatePicker from '../formComponents/DatePicker'
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { Company } from "../UserControl";
-import * as CompaniesPage from "./CompaniesPage";
-import UsersForm from "../Users/UsersForm";
-import UsersPage from "../Users/UsersPage";
+import UsersTable from "../Users/UsersTable";
 
-export default function CompaniesForm(props: any) {
-  const { addOrEdit, editableRecord, setOpenForm, setEditableRecord } = props;
+interface Props {
+  addOrEdit: (user: Company, resetForm: () => void) => void;
+  editableRecord: Company | null;
+  openForm: boolean;
+  setOpenForm: Dispatch<SetStateAction<boolean>>;
+  setEditableRecord: Dispatch<SetStateAction<Company | null>>;
+}
+export default function CompaniesForm({
+  addOrEdit,
+  editableRecord,
+  openForm,
+  setOpenForm,
+  setEditableRecord,
+}: Props) {
   const useStyles = makeStyles((customTheme) => ({
     root: {
       "& .MuiFormControl-root": {
@@ -48,10 +38,13 @@ export default function CompaniesForm(props: any) {
   const defaultCompanyValue: Company = {
     ID: "",
     name: "",
-    users: [],
+    // users: [],
     city: "",
     country: "",
   };
+  // const filteredUsers = UserControl.getUsers().filter(
+  //   (item: UserControl.User) => item.companyID !== values.ID
+  // );
 
   const validate = (formValues: any = values) => {
     let temp: any = { ...errors };
@@ -69,18 +62,17 @@ export default function CompaniesForm(props: any) {
     if (formValues == values) return Object.values(temp).every((x) => x == "");
   };
 
-  //useState hook za setovanje vrednosti Usera
   const [values, setValues] = useState<Company>(defaultCompanyValue);
-  //useState hook za setovanje greški i validaciju
+  const [users, setUsers] = useState<UserControl.User[]>(
+    UserControl.getUsers()
+  );
   const handleInputChange = (e: React.ChangeEvent<any>): void => {
     setValues({
       ...values,
       [e.target.name]: e.target.value as string,
     });
-    // live validacija validate(values)
   };
   const [errors, setErrors] = useState<any>({});
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const activeCompany = values;
@@ -98,13 +90,18 @@ export default function CompaniesForm(props: any) {
   useEffect(() => {
     if (editableRecord !== null) {
       setValues({ ...editableRecord });
+      const filtered = UserControl.getUsers().filter(
+        (item: UserControl.User) => item.companyID === editableRecord.ID
+      );
+      setUsers(filtered);
     }
-  }, [editableRecord]);
+  }, [editableRecord, openForm]);
   const closeForm = () => {
     setOpenForm(false);
     setValues(defaultCompanyValue);
     setEditableRecord(null);
   };
+
   return (
     <form className={classes.root} autoComplete="off">
       <Grid container>
@@ -151,9 +148,13 @@ export default function CompaniesForm(props: any) {
       </Grid>
 
       <div>
-        {(() => {
-          return <UsersPage />;
-        })()}
+        {editableRecord && (
+          <UsersTable
+            users={users}
+            setUsers={setUsers}
+            filterCompanyID={values.ID}
+          />
+        )}
       </div>
     </form>
   );

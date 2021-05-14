@@ -1,14 +1,13 @@
-import { AppBar, Grid, Toolbar, Paper, Badge } from "@material-ui/core";
-import React, { LegacyRef } from "react";
-import { Link, NavLink } from "react-router-dom";
-import useStyles from "./AppStyle";
-import PeopleIcon from "@material-ui/icons/People";
+import { AppBar, Grid, Toolbar } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
+import PeopleIcon from "@material-ui/icons/People";
+import React from "react";
+import useStyles from "./AppStyle";
+import Coords from "./Coords";
 import customTheme from "./CustomTheme";
 import HeaderLink from "./HeaderLink";
-import Tooltip from "@material-ui/core/Tooltip";
-import Coords from "./Coords";
 
 const Header: React.FC = () => {
   const classes = useStyles();
