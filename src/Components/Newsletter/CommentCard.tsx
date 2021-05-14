@@ -8,6 +8,7 @@ import Zoom from "@material-ui/core/Zoom";
 import React from "react";
 import customTheme from "../../CustomTheme";
 import Button from "../formComponents/Button";
+import { Comment } from "./PostDetails";
 
 const useStyles = makeStyles({
   root: {
@@ -33,8 +34,12 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CommentCard(props: any) {
-  const { postId, id, name, email, body, onClick, isFullBody } = props;
+interface Props {
+  comment: Comment;
+  onClick: () => void;
+  isFullBody: boolean;
+}
+export default function CommentCard({ comment, onClick, isFullBody }: Props) {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
@@ -47,17 +52,17 @@ export default function CommentCard(props: any) {
       <CardContent>
         <Tooltip
           className={classes.hoverEmail}
-          title={email}
+          title={comment.email}
           placement="top-end"
           TransitionComponent={Zoom}
           TransitionProps={{ timeout: 800 }}
         >
           <Typography className={classes.blogTitle} variant="h6" component="h6">
-            {name}
+            {comment.name}
           </Typography>
         </Tooltip>
         <Typography variant="body2" component="p">
-          {isFullBody ? body : conditionalBody(body)}
+          {isFullBody ? comment.body : conditionalBody(comment.body)}
         </Typography>
       </CardContent>
       <CardActions>

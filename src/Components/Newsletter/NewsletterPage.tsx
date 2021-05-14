@@ -1,18 +1,9 @@
-import {
-  createStyles,
-  Grid,
-  makeStyles,
-  Paper,
-  Theme,
-} from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import { RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
-import UsersPage from "../Users/UsersPage";
-import OutlinedCard from "./PostCard";
+import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import Popup from "../Popup";
+import OutlinedCard from "./PostCard";
 import PostDetails from "./PostDetails";
-import { isTemplateExpression } from "typescript";
+import axios from "axios";
 
 const useStyles = makeStyles((customTheme: Theme) =>
   createStyles({
@@ -30,61 +21,53 @@ export interface BlogPost {
   userId: number;
 }
 
-// interface Props extends RouteComponentProps<{}> { }
 const fetchURL = "https://jsonplaceholder.typicode.com/posts";
 export default function NewsletterPage() {
   const [openForm, setOpenForm] = useState(false);
-  const [blogId, setBlogId] = useState<string>();
-  const [userId, setUserId] = useState<number>();
-  const [postId, setPostId] = useState<number>();
+  const [popupTitle, setPopupTitle] = useState<string>("");
+
+  const [blogPost, setBlogPost] = useState<BlogPost>();
   const [data, setData] = useState<BlogPost[]>([]);
-  const [blogBody, setBlogBody] = useState<string>();
-  const [blogTitle, setBlogTitle] = useState<string>();
 
   const classes = useStyles();
-  const getData = () => fetch(fetchURL).then((res) => res.json());
-
+  async function getData() {
+    try {
+      const res = await axios.get<BlogPost[]>(fetchURL);
+      const data = res.data;
+      setData(data);
+      console.log("Data fetched successfully");
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
   useEffect(() => {
-    getData().then((data: BlogPost[]) => setData(data));
+    getData();
   }, []);
 
-  const openPopup = (item: BlogPost) => {
-    setBlogId(`Blog no: ${item.id}`);
-    setBlogTitle(item.title);
-    setBlogBody(item.body);
+  const openPopup = (item: BlogPost): void => {
+    setPopupTitle(`Blog no: ${item.id}`);
+    setBlogPost(item);
     setOpenForm(true);
-    setPostId(item.id);
-    setUserId(item.userId);
   };
 
-  const setTitle = (item: BlogPost) => {
-    setBlogTitle(item.title);
-  };
   return (
     <>
       <Grid container spacing={2} className={classes.root}>
         {data?.map((item: BlogPost) => (
           <Grid item xs={6} key={item.id}>
-            <OutlinedCard
-              onClick={() => openPopup(item)}
-              postId={item.id}
-              title={item.title}
-              body={item.body}
-              userId={item.userId}
-            />
+            <OutlinedCard onClick={() => openPopup(item)} blogPost={item} />
           </Grid>
         ))}
       </Grid>
-      <Popup openForm={openForm} setOpenForm={setOpenForm} title={blogId}>
-        <PostDetails
-          blogTitle={blogTitle}
-          setOpenForm={setOpenForm}
-          blogBody={blogBody}
-          userId={userId}
-          postId={postId}
-          setData={setData}
-          fetchURL={fetchURL}
-        />
+      <Popup openForm={openForm} title={popupTitle}>
+        {blogPost && (
+          <PostDetails
+            blogPost={blogPost}
+            setOpenForm={setOpenForm}
+            fetchURL={fetchURL}
+            setBlogPost={setBlogPost}
+          />
+        )}
       </Popup>
     </>
   );

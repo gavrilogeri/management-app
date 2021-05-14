@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-// import { Button as MuiButton } from '@material-ui/core/Button';
 import Typography from "@material-ui/core/Typography";
 import Button from "../formComponents/Button";
 import customTheme from "../../CustomTheme";
+import { BlogPost } from "./NewsletterPage";
 
 const useStyles = makeStyles({
   root: {
@@ -29,8 +29,12 @@ const useStyles = makeStyles({
   },
 });
 
-export default function OutlinedCard(props: any) {
-  const { postId, title, body, onClick } = props;
+interface Props {
+  blogPost: BlogPost;
+  onClick: () => void;
+}
+
+export default function OutlinedCard({ blogPost, onClick }: Props) {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
@@ -42,16 +46,16 @@ export default function OutlinedCard(props: any) {
           color="textSecondary"
           gutterBottom
         >
-          Blog no {postId}
+          Blog no {blogPost.id}
         </Typography>
         <Typography className={classes.blogTitle} variant="h5" component="h2">
           {bull}
-          {title}
+          {blogPost.title}
           {bull}
         </Typography>
 
         <Typography variant="body2" component="p">
-          {body}
+          {blogPost.body}
         </Typography>
       </CardContent>
       <CardActions>

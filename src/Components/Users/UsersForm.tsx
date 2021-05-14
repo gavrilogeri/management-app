@@ -12,10 +12,15 @@ interface Props {
   editableRecord: User | null;
   setOpenForm: Dispatch<SetStateAction<boolean>>;
   setEditableRecord: Dispatch<SetStateAction<User | null>>;
+  filterCompanyID?: string;
 }
-export default function UsersForm(props: Props) {
-  const { addOrEdit, editableRecord, setOpenForm, setEditableRecord } = props;
-
+export default function UsersForm({
+  addOrEdit,
+  editableRecord,
+  setOpenForm,
+  setEditableRecord,
+  filterCompanyID,
+}: Props) {
   const defaultUserValue: User = {
     firstName: "",
     lastName: "",
@@ -146,14 +151,26 @@ export default function UsersForm(props: Props) {
         </Grid>
 
         <Grid item xs={6}>
-          <DropdownNative
-            labelId="Company Name"
-            name="companyID"
-            value={values.companyID}
-            onChange={handleInputChange}
-            error={errors.companyID}
-            inputProps={UserControl.getAllCompanies()}
-          />
+          {filterCompanyID ? (
+            <DropdownNative
+              labelId="Company Name"
+              name="companyID"
+              value={values.companyID}
+              onChange={handleInputChange}
+              error={errors.companyID}
+              defaultValue={filterCompanyID}
+              inputProps={UserControl.getAllCompanies()}
+            />
+          ) : (
+            <DropdownNative
+              labelId="Company Name"
+              name="companyID"
+              value={values.companyID}
+              onChange={handleInputChange}
+              error={errors.companyID}
+              inputProps={UserControl.getAllCompanies()}
+            />
+          )}
           <TextField
             id="DOB"
             name="DOB"

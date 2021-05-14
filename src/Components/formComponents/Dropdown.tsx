@@ -1,15 +1,12 @@
 import {
-  BaseTextFieldProps,
   FormControl,
+  FormHelperText,
   InputLabel,
+  MenuItem,
   Select,
   SelectProps,
-  MenuItem,
-  FormHelperText,
 } from "@material-ui/core";
 import React from "react";
-import { getPositions } from "../UserControl";
-import Position from "../Position";
 
 export default function Dropdown(props: SelectProps) {
   const {

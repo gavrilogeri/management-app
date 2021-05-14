@@ -6,11 +6,12 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import customTheme from "../CustomTheme";
-import Button from "./formComponents/Button";
-
-export default function Popup(props: any) {
-  const { title, children, openForm, setOpenForm, setValues, body } = props;
-
+interface Props {
+  openForm: boolean;
+  title: string | undefined;
+  children: React.ReactNode;
+}
+export default function Popup({ title, children, openForm }: Props) {
   return (
     <Dialog open={openForm} maxWidth="md">
       <DialogTitle>
