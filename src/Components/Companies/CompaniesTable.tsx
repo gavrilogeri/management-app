@@ -14,6 +14,8 @@ import TableHeader from "../tableComponents/TableHeader";
 import { Company } from "../UserControl";
 import AddIcon from "@material-ui/icons/Add";
 import TableRowCompany from "../tableComponents/TableRowCompany";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const useStyles = makeStyles((customTheme) => ({
   container: {
@@ -43,26 +45,24 @@ const useStyles = makeStyles((customTheme) => ({
   },
 }));
 interface Props {
-  companies: Company[];
-  setCompanies: React.Dispatch<React.SetStateAction<Company[]>>;
   openPopup: (item: Company, resetForm: void) => void;
   openFormAndSetTitle: () => void;
   onDelete: (id: string) => void;
 }
 const CompaniesTable: React.FC<Props> = ({
-  companies,
-  setCompanies,
   openPopup,
   openFormAndSetTitle,
   onDelete,
 }) => {
   const classes = useStyles();
+  const companiesState = useSelector((state: RootState) => state.companies);
+
   return (
     <>
       <Paper className={classes.container}>
         <Button
           className={classes.addButton}
-          text="Add New User"
+          text="Add New Company"
           variant="outlined"
           startIcon={<AddIcon />}
           onClick={openFormAndSetTitle}
@@ -71,8 +71,8 @@ const CompaniesTable: React.FC<Props> = ({
           <Table className={classes.table}>
             <TableHeader headerCells={companiesHeaderCells} />
             <TableBody>
-              {companies.length !== 0 ? (
-                companies.map((item: Company) => (
+              {companiesState.length !== 0 ? (
+                companiesState.map((item: Company) => (
                   <TableRowCompany
                     item={item}
                     openPopup={openPopup}
@@ -86,7 +86,7 @@ const CompaniesTable: React.FC<Props> = ({
                     align={"center"}
                     className={classes.noDataCell}
                   >
-                    NO DATA. Please Add a New User.
+                    NO DATA. Please Add a New Company.
                   </TableCell>
                 </TableRow>
               )}

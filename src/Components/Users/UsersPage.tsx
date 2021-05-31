@@ -1,14 +1,19 @@
-import { makeStyles } from "@material-ui/core";
-import React, { useState } from "react";
-import * as UserControl from "../UserControl";
+import React from "react";
+import { connect } from "react-redux";
+import { RootState } from "../../store/store";
 import UsersTable from "./UsersTable";
+const mapStateToProps = (state: RootState) => {
+  return {
+    users: state.users,
+  };
+};
 
-export default function UsersPage() {
-  const [records, setRecords] = useState(UserControl.getUsers());
-
+type Props = ReturnType<typeof mapStateToProps>;
+export function UsersPage(props: Props) {
   return (
     <>
-      <UsersTable users={records} setUsers={setRecords} />
+      <UsersTable users={props.users} />
     </>
   );
 }
+export default connect(mapStateToProps)(UsersPage);

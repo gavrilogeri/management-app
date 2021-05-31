@@ -1,11 +1,14 @@
 import { Grid, makeStyles, TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import React, { Dispatch, useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 import Button from "../formComponents/Button";
-import CommentCard from "./CommentCard";
-import { BlogPost } from "./NewsletterPage";
-import axios from "axios";
 import Popup from "../Popup";
+import { deleteBlog, updateBlog } from "./blogSlice";
+import CommentCard from "./CommentCard";
+import { fetchComments } from "./commentSlice";
+import { BlogPost } from "./NewsletterPage";
 
 const useStyles = makeStyles((customTheme) => ({
   root: {
@@ -36,20 +39,41 @@ export interface Comment {
   body: string;
   email: string;
 }
-export default function PostDetails({
-  blogPost,
-  setOpenForm,
-  fetchURL,
-  setBlogPost,
-}: {
+interface StateAndDispatchProps {
+  onFetchComments: (blogID: number) => void;
+  onDelete: (blogID: number) => void;
+  onUpdate: (blog: BlogPost) => void;
+  comments: Comment[];
+}
+interface Props {
   blogPost: BlogPost;
   setOpenForm: any;
   fetchURL: string;
   setBlogPost: Dispatch<React.SetStateAction<BlogPost | undefined>>;
-}) {
-  // const  = props;
-  const [data, setData] = useState<Comment[]>([]);
-  const [commentData, setCommentData] = useState<Comment>();
+}
+const mapStateToProps = (state: RootState) => {
+  return {
+    comments: state.comments,
+  };
+};
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    onFetchComments: (blogID: number) => dispatch(fetchComments(blogID)),
+    onDelete: (blogID: number) => dispatch(deleteBlog(blogID)),
+    onUpdate: (blog: BlogPost) => dispatch(updateBlog(blog)),
+  };
+};
+
+function PostDetails({
+  blogPost,
+  setOpenForm,
+  setBlogPost,
+  onFetchComments,
+  onDelete,
+  onUpdate,
+  comments,
+}: Props & StateAndDispatchProps) {
+  const [selectedCommentData, setSelectedCommentData] = useState<Comment>();
   const [openFullComent, setOpenFullComment] = useState<boolean>(false);
 
   const handleBlogChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,54 +83,21 @@ export default function PostDetails({
     });
   };
 
-  async function getData() {
-    try {
-      const res = await axios.get<Comment[]>(
-        `${fetchURL}/${blogPost.id}/comments`
-      );
-      const data = await res.data;
-      setData(data);
-      console.log("Data fetched successfully");
-    } catch (error) {
-      console.log(error.response);
-    }
-  }
-
   useEffect(() => {
-    getData();
+    onFetchComments(blogPost.id);
   }, []);
 
-  const deletePost = async (postId: number) => {
+  const deletePost = (postId: number) => {
     try {
-      const res = await axios.delete(`${fetchURL}/${postId}`, {
-        method: "DELETE",
-      });
-      console.log("succesfully deleted", res);
+      onDelete(postId);
       setOpenForm(false);
       alert("POST SUCCESFULLY DELETED");
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
-  const updatePost = async (blogUpdated: BlogPost) => {
-    try {
-      const res = await axios.put<BlogPost>(
-        `${fetchURL}/${blogPost?.id}`,
-        blogUpdated,
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
-        }
-      );
-      console.log(res);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-
   const openCommentPopup = (item: Comment) => {
-    setCommentData(item);
+    setSelectedCommentData(item);
     setOpenFullComment(true);
   };
 
@@ -150,7 +141,7 @@ export default function PostDetails({
             <Button
               type="submit"
               text="UPDATE POST"
-              onClick={() => updatePost(blogPost)}
+              onClick={() => onUpdate(blogPost)}
             />
           </Grid>
           <Grid item xs={4}>
@@ -177,7 +168,7 @@ export default function PostDetails({
               Comments:
             </Typography>
           </Grid>
-          {data?.map((item: Comment) => (
+          {comments?.map((item: Comment) => (
             <Grid
               item
               xs={6}
@@ -192,10 +183,10 @@ export default function PostDetails({
             </Grid>
           ))}
         </Grid>
-        <Popup openForm={openFullComent} title={commentData?.name}>
-          {commentData && (
+        <Popup openForm={openFullComent} title={selectedCommentData?.name}>
+          {selectedCommentData && (
             <CommentCard
-              comment={commentData}
+              comment={selectedCommentData}
               isFullBody={true}
               onClick={() => setOpenFullComment(false)}
             />
@@ -205,3 +196,5 @@ export default function PostDetails({
     </div>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetails);
