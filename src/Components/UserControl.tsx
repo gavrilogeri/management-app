@@ -7,7 +7,7 @@ export interface User {
   lastName: string;
   companyID: string;
   companyName: string;
-  DOB: Date;
+  DOB: Date | string;
   Position: Position | string;
   phoneNumber: string;
 }
@@ -57,9 +57,8 @@ const keysCompany = {
   companies: "companies",
   companyID: "companyID",
 };
-
 export function getAllCompanies(): Company[] {
-  if (localStorage.getItem(keysCompany.companies) == null) {
+  if (localStorage.getItem(keysCompany.companies) === null) {
     localStorage.setItem(keysCompany.companies, JSON.stringify([]));
   }
   let companies: Company[] = JSON.parse(
@@ -67,6 +66,38 @@ export function getAllCompanies(): Company[] {
   );
   return companies;
 }
+//load state from local storage Dan Abramov loadState u videu na 1:10
+export function loadCompanyState(): any {
+  try {
+    const serializedState = localStorage.getItem(keysCompany.companies);
+    if (serializedState === null) {
+      return [] as Company[];
+    }
+    return JSON.parse(serializedState);
+  } catch (error) {
+    return undefined;
+  }
+}
+export function loadUserState(): any {
+  try {
+    const serializedState = localStorage.getItem(keys.users);
+    if (serializedState === null) {
+      return [] as User[];
+    }
+    return JSON.parse(serializedState);
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export const saveState = (key: string, data: User[] | Company[]) => {
+  try {
+    const serializedState = JSON.stringify(data);
+    localStorage.setItem(key, serializedState);
+  } catch (err) {
+    //ignore write irrors
+  }
+};
 
 export function getCompNameByCompID(companyID: string) {
   let companies = getAllCompanies();
@@ -122,7 +153,7 @@ function getCompByCompID(companyID: string) {
   return company !== undefined ? company : null;
 }
 
-function uuidv4() {
+export function uuidv4() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
       v = c == "x" ? r : (r & 0x3) | 0x8;

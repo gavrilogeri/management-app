@@ -26,7 +26,7 @@ export default function UsersForm({
     lastName: "",
     companyID: "",
     companyName: "",
-    DOB: new Date("1970-01-01"),
+    DOB: new Date("1970-01-01").toISOString().replace(/T.*/, ""),
     Position: "",
     phoneNumber: "",
     ID: "",
@@ -46,8 +46,6 @@ export default function UsersForm({
   }));
 
   const [values, setValues] = useState<User>(defaultUserValue);
-  //useState hook za setovanje greški i validaciju
-
   const [errors, setErrors] = useState<any>({});
   const classes = useStyles();
 
@@ -159,7 +157,7 @@ export default function UsersForm({
               onChange={handleInputChange}
               error={errors.companyID}
               defaultValue={filterCompanyID}
-              inputProps={UserControl.getAllCompanies()}
+              inputProps={UserControl.loadCompanyState()}
             />
           ) : (
             <DropdownNative
@@ -168,7 +166,7 @@ export default function UsersForm({
               value={values.companyID}
               onChange={handleInputChange}
               error={errors.companyID}
-              inputProps={UserControl.getAllCompanies()}
+              inputProps={UserControl.loadCompanyState()}
             />
           )}
           <TextField

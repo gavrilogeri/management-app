@@ -9,24 +9,25 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { usersHeaderCells } from "../../helpers";
+import { AppDispatch } from "../../store/store";
 import AlertNotification from "../formComponents/AlertNotification";
 import Button from "../formComponents/Button";
 import Popup from "../Popup";
 import TableHeader from "../tableComponents/TableHeader";
 import TableRowUser from "../tableComponents/TableRowUser";
-import {
-  deleteUser,
-  getUsers,
-  insertUser,
-  updateUser,
-  User,
-} from "../UserControl";
+import { User } from "../UserControl";
 import UsersForm from "./UsersForm";
+import { addUser, editUser, removeUser } from "./usersSlice";
 
+interface DispatchProps {
+  onAddUser: (user: User) => void; //what type should this function be?Is this correct? Is this the correct way of doing dispatch logic with mapDispatchToProps?
+  onEditUser: (user: User) => void;
+  onDeleteUser: (id: string) => void;
+}
 interface Props {
   users: User[];
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   filterCompanyID?: string;
 }
 const useStyles = makeStyles((customTheme) => ({
@@ -56,8 +57,21 @@ const useStyles = makeStyles((customTheme) => ({
     },
   },
 }));
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    onAddUser: (user: User) => dispatch(addUser(user)),
+    onEditUser: (user: User) => dispatch(editUser(user)),
+    onDeleteUser: (id: string) => dispatch(removeUser({ id })),
+  };
+};
 
-const UsersTable: React.FC<Props> = ({ users, setUsers, filterCompanyID }) => {
+const UsersTable: React.FC<Props & DispatchProps> = ({
+  users,
+  filterCompanyID,
+  onAddUser,
+  onEditUser,
+  onDeleteUser,
+}) => {
   const [openForm, setOpenForm] = useState(false);
   const [editableRecord, setEditableRecord] = useState<User | null>(null);
   const [title, setFormTitle] = useState<string>();
@@ -66,18 +80,17 @@ const UsersTable: React.FC<Props> = ({ users, setUsers, filterCompanyID }) => {
     notificationMessage: "",
     typeOfNotification: "",
   });
+
   function addOrEdit(user: User, resetForm: () => void) {
     if (user.ID) {
-      updateUser(user);
-      //alert("User Updated Successfully");
+      onEditUser(user);
       setAlertPopup({
         isTriggered: true,
         notificationMessage: "User Updated Successfully",
         typeOfNotification: "info",
       });
     } else {
-      insertUser(user);
-      // alert("User Added Successfully");
+      onAddUser(user);
       setAlertPopup({
         isTriggered: true,
         notificationMessage: "User Added Successfully",
@@ -85,11 +98,8 @@ const UsersTable: React.FC<Props> = ({ users, setUsers, filterCompanyID }) => {
       });
     }
     resetForm();
-
     setEditableRecord(null);
     setOpenForm(false);
-
-    setUsers(getUsers()); //update tabele nakon ubacivanja
   }
 
   const openPopup = (item: User) => {
@@ -97,17 +107,14 @@ const UsersTable: React.FC<Props> = ({ users, setUsers, filterCompanyID }) => {
     setOpenForm(true);
     setFormTitle("UPDATE EXISTING USER");
   };
-  /////////////////////////////
   const onDelete = (id: string) => {
     if (window.confirm("Delete is permanent. Do you wish to proceed?")) {
-      deleteUser(id);
-      setUsers(getUsers()); //update tabele nakon izbacivanja
+      onDeleteUser(id);
       setAlertPopup({
         isTriggered: true,
         notificationMessage: "User Deleted Successfully",
         typeOfNotification: "error",
       });
-      // setUsers(getUsers());
     }
   };
 
@@ -192,4 +199,4 @@ const UsersTable: React.FC<Props> = ({ users, setUsers, filterCompanyID }) => {
   );
 };
 
-export default UsersTable;
+export default connect(null, mapDispatchToProps)(UsersTable);

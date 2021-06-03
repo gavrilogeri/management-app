@@ -1,6 +1,8 @@
 // eslint-disable-next-line
 import { Grid, makeStyles, TextField } from "@material-ui/core";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { connect } from "react-redux";
+import type { RootState } from "../../store/store";
 import Button from "../formComponents/Button";
 import * as UserControl from "../UserControl";
 import { Company } from "../UserControl";
@@ -12,13 +14,22 @@ interface Props {
   openForm: boolean;
   setOpenForm: Dispatch<SetStateAction<boolean>>;
   setEditableRecord: Dispatch<SetStateAction<Company | null>>;
+  users: UserControl.User[];
 }
-export default function CompaniesForm({
+
+const mapStateToProps = (state: RootState) => {
+  return {
+    users: state.users,
+  };
+};
+
+function CompaniesForm({
   addOrEdit,
   editableRecord,
   openForm,
   setOpenForm,
   setEditableRecord,
+  users,
 }: Props) {
   const useStyles = makeStyles((customTheme) => ({
     root: {
@@ -63,9 +74,8 @@ export default function CompaniesForm({
   };
 
   const [values, setValues] = useState<Company>(defaultCompanyValue);
-  const [users, setUsers] = useState<UserControl.User[]>(
-    UserControl.getUsers()
-  );
+  // const [filtered, setFiltered] = useState<UserControl.User[]>(users);
+
   const handleInputChange = (e: React.ChangeEvent<any>): void => {
     setValues({
       ...values,
@@ -90,10 +100,10 @@ export default function CompaniesForm({
   useEffect(() => {
     if (editableRecord !== null) {
       setValues({ ...editableRecord });
-      const filtered = UserControl.getUsers().filter(
-        (item: UserControl.User) => item.companyID === editableRecord.ID
-      );
-      setUsers(filtered);
+      // const filterUsers = users.filter(
+      //   (item: UserControl.User) => item.companyID === editableRecord.ID
+      // );
+      // setFiltered(filterUsers);
     }
   }, [editableRecord, openForm]);
   const closeForm = () => {
@@ -137,6 +147,7 @@ export default function CompaniesForm({
         <Grid item xs={2}>
           <Button type="submit" text="Submit" onClick={handleSubmit} />
         </Grid>
+
         <Grid item xs={2}>
           <Button
             text="CLOSE"
@@ -151,7 +162,7 @@ export default function CompaniesForm({
         {editableRecord && (
           <UsersTable
             users={users}
-            setUsers={setUsers}
+            // setUsers={setUsers}
             filterCompanyID={values.ID}
           />
         )}
@@ -159,3 +170,4 @@ export default function CompaniesForm({
     </form>
   );
 }
+export default connect(mapStateToProps)(CompaniesForm);

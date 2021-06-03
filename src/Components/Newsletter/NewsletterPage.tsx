@@ -1,9 +1,11 @@
 import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 import Popup from "../Popup";
+import { fetchBlogs } from "./blogSlice";
 import OutlinedCard from "./PostCard";
 import PostDetails from "./PostDetails";
-import axios from "axios";
 
 const useStyles = makeStyles((customTheme: Theme) =>
   createStyles({
@@ -20,55 +22,60 @@ export interface BlogPost {
   body: string;
   userId: number;
 }
+interface Props {
+  blogs: BlogPost[];
+  onFetchBlogs: () => void;
+}
 
+const mapStateToProps = (state: RootState) => {
+  return {
+    blogs: state.blogs,
+  };
+};
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    onFetchBlogs: () => dispatch(fetchBlogs()),
+  };
+};
 const fetchURL = "https://jsonplaceholder.typicode.com/posts";
-export default function NewsletterPage() {
+
+function NewsletterPage(props: Props) {
   const [openForm, setOpenForm] = useState(false);
   const [popupTitle, setPopupTitle] = useState<string>("");
-
-  const [blogPost, setBlogPost] = useState<BlogPost>();
-  const [data, setData] = useState<BlogPost[]>([]);
-
+  const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost>();
   const classes = useStyles();
-  async function getData() {
-    try {
-      const res = await axios.get<BlogPost[]>(fetchURL);
-      const data = res.data;
-      setData(data);
-      console.log("Data fetched successfully");
-    } catch (error) {
-      console.log(error.response);
-    }
-  }
+
   useEffect(() => {
-    getData();
+    // getData();
+    props.onFetchBlogs();
   }, []);
 
   const openPopup = (item: BlogPost): void => {
     setPopupTitle(`Blog no: ${item.id}`);
-    setBlogPost(item);
+    setSelectedBlogPost(item);
     setOpenForm(true);
   };
 
   return (
     <>
       <Grid container spacing={2} className={classes.root}>
-        {data?.map((item: BlogPost) => (
+        {props.blogs?.map((item: BlogPost) => (
           <Grid item xs={6} key={item.id}>
             <OutlinedCard onClick={() => openPopup(item)} blogPost={item} />
           </Grid>
         ))}
       </Grid>
       <Popup openForm={openForm} title={popupTitle}>
-        {blogPost && (
+        {selectedBlogPost && (
           <PostDetails
-            blogPost={blogPost}
+            blogPost={selectedBlogPost}
             setOpenForm={setOpenForm}
             fetchURL={fetchURL}
-            setBlogPost={setBlogPost}
+            setBlogPost={setSelectedBlogPost}
           />
         )}
       </Popup>
     </>
   );
 }
+export default connect(mapStateToProps, mapDispatchToProps)(NewsletterPage);
