@@ -44,6 +44,7 @@ interface StateAndDispatchProps {
   onDelete: (blogID: number) => void;
   onUpdate: (blog: BlogPost) => void;
   comments: Comment[];
+  isLoading: boolean;
 }
 interface Props {
   blogPost: BlogPost;
@@ -53,7 +54,8 @@ interface Props {
 }
 const mapStateToProps = (state: RootState) => {
   return {
-    comments: state.comments,
+    comments: state.comments.comments,
+    isLoading: state.comments.isLoading,
   };
 };
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -72,6 +74,7 @@ function PostDetails({
   onDelete,
   onUpdate,
   comments,
+  isLoading,
 }: Props & StateAndDispatchProps) {
   const [selectedCommentData, setSelectedCommentData] = useState<Comment>();
   const [openFullComent, setOpenFullComment] = useState<boolean>(false);
@@ -139,6 +142,7 @@ function PostDetails({
           </Grid>
           <Grid item xs={4}>
             <Button
+              size="small"
               type="submit"
               text="UPDATE POST"
               onClick={() => onUpdate(blogPost)}
@@ -146,6 +150,7 @@ function PostDetails({
           </Grid>
           <Grid item xs={4}>
             <Button
+              size="small"
               text="REMOVE POST"
               color="secondary"
               onClick={() => deletePost(blogPost.id)}
@@ -153,6 +158,7 @@ function PostDetails({
           </Grid>
           <Grid item xs={4}>
             <Button
+              size="small"
               text="CLOSE WINDOW"
               color="secondary"
               variant="outlined"
@@ -183,14 +189,21 @@ function PostDetails({
             </Grid>
           ))}
         </Grid>
-        <Popup openForm={openFullComent} title={selectedCommentData?.name}>
-          {selectedCommentData && (
-            <CommentCard
-              comment={selectedCommentData}
-              isFullBody={true}
-              onClick={() => setOpenFullComment(false)}
-            />
-          )}
+        <Popup
+          openForm={openFullComent}
+          title={selectedCommentData?.name}
+          onClick={() => setOpenFullComment(false)}
+        >
+          {selectedCommentData &&
+            (isLoading ? (
+              <div className="loading"></div>
+            ) : (
+              <CommentCard
+                comment={selectedCommentData}
+                isFullBody={true}
+                onClick={() => setOpenFullComment(false)}
+              />
+            ))}
         </Popup>
       </form>
     </div>

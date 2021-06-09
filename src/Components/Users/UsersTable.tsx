@@ -1,11 +1,11 @@
 import {
-  makeStyles,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
+  TablePagination,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useState } from "react";
@@ -30,33 +30,7 @@ interface Props {
   users: User[];
   filterCompanyID?: string;
 }
-const useStyles = makeStyles((customTheme) => ({
-  container: {
-    margin: customTheme.spacing(5),
-    padding: customTheme.spacing(3),
-  },
-  addButton: {
-    marginBottom: customTheme.spacing(4),
-  },
-  noDataCell: {
-    fontWeight: "bold!important" as any,
-    color: customTheme.palette.primary.main,
-  },
-  table: {
-    "& thead th": {
-      fontWeight: "700",
-      letterSpacing: "2px",
-      color: "#fff",
-      backgroundColor: customTheme.palette.primary.main,
-    },
-    "& tbody td": {
-      fontWeight: "300",
-    },
-    "& tbody tr:hover": {
-      backgroundColor: "#ebffff",
-    },
-  },
-}));
+
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
     onAddUser: (user: User) => dispatch(addUser(user)),
@@ -80,6 +54,9 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
     notificationMessage: "",
     typeOfNotification: "",
   });
+  const pages = [5, 10, 20];
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
 
   function addOrEdit(user: User, resetForm: () => void) {
     if (user.ID) {
@@ -107,6 +84,10 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
     setOpenForm(true);
     setFormTitle("UPDATE EXISTING USER");
   };
+  const closePopup = () => {
+    setEditableRecord(null);
+    setOpenForm(false);
+  };
   const onDelete = (id: string) => {
     if (window.confirm("Delete is permanent. Do you wish to proceed?")) {
       onDeleteUser(id);
@@ -122,20 +103,33 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
     setOpenForm(true);
     setFormTitle("ADD NEW USER");
   };
-
-  const classes = useStyles();
+  const handleChangePage = (event: any, newPage: number) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event: any) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const populateTableAfterPaging = () => {
+    return users.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  };
   return (
     <>
-      <Paper className={classes.container}>
-        <Button
-          className={classes.addButton}
-          text="Add New User"
-          variant="outlined"
-          startIcon={<AddIcon />}
-          onClick={openFormAndSetTitle}
-        />
+      <Paper className="container">
+        <div className="titleAndButton">
+          <h2 className="tableTitle">USERS</h2>
+          <Button
+            // className={classes.addButton}
+            className="newUserButton"
+            size="small"
+            text="Add New User"
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={openFormAndSetTitle}
+          />
+        </div>
         <TableContainer>
-          <Table className={classes.table}>
+          <Table className="tableUsers">
             <TableHeader headerCells={usersHeaderCells} />
             <TableBody>
               {users.length !== 0 ? (
@@ -150,7 +144,7 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
                       />
                     ))
                 ) : (
-                  users.map((item: User) => (
+                  populateTableAfterPaging().map((item: User) => (
                     <TableRowUser
                       item={item}
                       openPopup={openPopup}
@@ -163,7 +157,7 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
                   <TableCell
                     colSpan={6}
                     align={"center"}
-                    className={classes.noDataCell}
+                    className="noDataCell"
                   >
                     NO DATA. Please Add a New User.
                   </TableCell>
@@ -172,10 +166,20 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          component="div"
+          page={page}
+          rowsPerPageOptions={pages}
+          rowsPerPage={rowsPerPage}
+          count={users.length}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
       </Paper>
-      <Popup openForm={openForm} title={title}>
+      <Popup openForm={openForm} title={title} onClick={() => closePopup()}>
         {filterCompanyID ? (
           <UsersForm
+            className="usersForm"
             editableRecord={editableRecord}
             addOrEdit={addOrEdit}
             setOpenForm={setOpenForm}
@@ -184,6 +188,7 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
           />
         ) : (
           <UsersForm
+            className="usersForm"
             editableRecord={editableRecord}
             addOrEdit={addOrEdit}
             setOpenForm={setOpenForm}

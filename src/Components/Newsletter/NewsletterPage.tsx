@@ -6,15 +6,8 @@ import Popup from "../Popup";
 import { fetchBlogs } from "./blogSlice";
 import OutlinedCard from "./PostCard";
 import PostDetails from "./PostDetails";
-
-const useStyles = makeStyles((customTheme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      padding: customTheme.spacing(2),
-    },
-  })
-);
+// import "/src/styles/appStyles.scss";
+// import "./blogStyles.css";
 
 export interface BlogPost {
   id: number;
@@ -24,12 +17,14 @@ export interface BlogPost {
 }
 interface Props {
   blogs: BlogPost[];
+  isLoading: boolean;
   onFetchBlogs: () => void;
 }
 
 const mapStateToProps = (state: RootState) => {
   return {
-    blogs: state.blogs,
+    blogs: state.blogs.blogs,
+    isLoading: state.blogs.isLoading,
   };
 };
 const mapDispatchToProps = (dispatch: AppDispatch) => {
@@ -43,7 +38,6 @@ function NewsletterPage(props: Props) {
   const [openForm, setOpenForm] = useState(false);
   const [popupTitle, setPopupTitle] = useState<string>("");
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost>();
-  const classes = useStyles();
 
   useEffect(() => {
     // getData();
@@ -57,15 +51,31 @@ function NewsletterPage(props: Props) {
   };
 
   return (
-    <>
-      <Grid container spacing={2} className={classes.root}>
-        {props.blogs?.map((item: BlogPost) => (
-          <Grid item xs={6} key={item.id}>
-            <OutlinedCard onClick={() => openPopup(item)} blogPost={item} />
-          </Grid>
-        ))}
-      </Grid>
-      <Popup openForm={openForm} title={popupTitle}>
+    <div className="newsletterContainer">
+      <h1 className="heading">NEWSLETTER</h1>
+      <p>
+        Feel free to comment and share your feedback, we would like to know your
+        toughts on following topics!
+      </p>
+
+      {props.isLoading ? (
+        <div className="loadingContainer">
+          <div className="loading"></div>
+        </div>
+      ) : (
+        <Grid container spacing={4} className="blogGrid">
+          {props.blogs?.map((item: BlogPost) => (
+            <Grid item xs={4} key={item.id}>
+              <OutlinedCard onClick={() => openPopup(item)} blogPost={item} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+      <Popup
+        openForm={openForm}
+        title={popupTitle}
+        onClick={() => setOpenForm(false)}
+      >
         {selectedBlogPost && (
           <PostDetails
             blogPost={selectedBlogPost}
@@ -75,7 +85,7 @@ function NewsletterPage(props: Props) {
           />
         )}
       </Popup>
-    </>
+    </div>
   );
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewsletterPage);

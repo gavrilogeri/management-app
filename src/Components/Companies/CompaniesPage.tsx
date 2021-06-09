@@ -48,6 +48,10 @@ export default function CompaniesPage() {
     setOpenForm(true);
     setFormTitle("UPDATE EXISTING COMPANY");
   };
+  const closePopup = () => {
+    setEditableRecord(null);
+    setOpenForm(false);
+  };
   //records, headerCells
   const onDelete = (id: string) => {
     if (window.confirm("Delete is permanent. Do you wish to proceed?")) {
@@ -66,7 +70,7 @@ export default function CompaniesPage() {
         openFormAndSetTitle={openFormAndSetTitle}
         openPopup={openPopup}
       />
-      <Popup openForm={openForm} title={title}>
+      <Popup openForm={openForm} title={title} onClick={() => closePopup()}>
         <CompaniesForm
           editableRecord={editableRecord}
           addOrEdit={addOrEdit}

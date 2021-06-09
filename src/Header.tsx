@@ -3,61 +3,66 @@ import Tooltip from "@material-ui/core/Tooltip";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PeopleIcon from "@material-ui/icons/People";
+import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import React from "react";
-import useStyles from "./AppStyle";
 import Coords from "./Coords";
-import customTheme from "./CustomTheme";
 import HeaderLink from "./HeaderLink";
-
+import { motion } from "framer-motion";
+import "./styles/appStyle.scss";
 const Header: React.FC = () => {
-  const classes = useStyles();
-
   return (
-    <AppBar
-      position="static"
-      style={{ background: customTheme.palette.secondary.light }}
+    <motion.div
+      initial={{ y: -150, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, opacity: { ease: "easeIn", duration: 1.5 } }}
     >
-      <Toolbar>
-        <Grid
-          className={classes.headerStyle}
-          container
-          direction="row"
-          justify="flex-end"
-          alignItems="center"
-          spacing={5}
-        >
-          <Grid item xs={12} md={4} className={classes.logo}>
-            <h1> MANAGEMENT APP </h1>
+      <AppBar position="static" className="header">
+        <Toolbar variant="dense">
+          <Grid
+            className="headerStyle"
+            container
+            direction="row"
+            justify="flex-end"
+            alignItems="center"
+            spacing={5}
+          >
+            <Grid item xs={12} md={4} className="logo">
+              <h1> MANAGEMENT APP </h1>
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <HeaderLink
+                icon={<PeopleIcon fontSize="small" />}
+                linkAddress="/"
+                linkTitle="Users"
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <HeaderLink
+                icon={<LocationCityIcon fontSize="small" />}
+                linkAddress="/companies"
+                linkTitle="Companies"
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <HeaderLink
+                icon={<MenuBookIcon fontSize="small" />}
+                linkAddress="/newsletter"
+                linkTitle="Newsletter"
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <Tooltip title={<Coords />}>
+                <div className="weatherContainer">
+                  <button className="weatherButton">
+                    <BeachAccessIcon className="weatherIcon" fontSize="small" />
+                  </button>
+                </div>
+              </Tooltip>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={2}>
-            <HeaderLink
-              icon={<PeopleIcon />}
-              linkAddress="/"
-              linkTitle="Users"
-            />
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <HeaderLink
-              icon={<LocationCityIcon />}
-              linkAddress="/companies"
-              linkTitle="Companies"
-            />
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <HeaderLink
-              icon={<MenuBookIcon />}
-              linkAddress="/newsletter"
-              linkTitle="Newsletter"
-            />
-          </Grid>
-          <Grid item xs={12} md={2}>
-            <Tooltip title={<Coords />}>
-              <div>WEATHER FORECAST</div>
-            </Tooltip>
-          </Grid>
-        </Grid>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+    </motion.div>
   );
 };
 

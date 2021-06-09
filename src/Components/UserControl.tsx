@@ -66,6 +66,11 @@ export function getAllCompanies(): Company[] {
   );
   return companies;
 }
+export const conditionalLength = (text: string, maxLength: number): string => {
+  return text.length > maxLength
+    ? text.substring(0, maxLength).concat("...")
+    : text;
+};
 //load state from local storage Dan Abramov loadState u videu na 1:10
 export function loadCompanyState(): any {
   try {

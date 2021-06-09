@@ -5,29 +5,11 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "../formComponents/Button";
-import customTheme from "../../CustomTheme";
+// import customTheme from "../../CustomTheme";
 import { BlogPost } from "./NewsletterPage";
-
-const useStyles = makeStyles({
-  root: {
-    minWidth: 200,
-    boxShadow: "7px 7px 11px -4px #424242",
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  blogTitle: {
-    color: customTheme.palette.primary.main,
-  },
-  blogNo: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-});
+import { CardHeader, IconButton } from "@material-ui/core";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { conditionalLength } from "../UserControl";
 
 interface Props {
   blogPost: BlogPost;
@@ -35,37 +17,25 @@ interface Props {
 }
 
 export default function OutlinedCard({ blogPost, onClick }: Props) {
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  // const classes = useStyles();
+  const bull = <span className="bullet">•</span>;
 
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card className="root" variant="outlined">
+      <CardHeader
+        action={
+          <IconButton aria-label="settings" onClick={onClick}>
+            <MoreHorizIcon />
+          </IconButton>
+        }
+        title={conditionalLength(blogPost.title, 20)}
+        subheader={`Blog no ${blogPost.id}`}
+      />
       <CardContent>
-        <Typography
-          className={classes.blogNo}
-          color="textSecondary"
-          gutterBottom
-        >
-          Blog no {blogPost.id}
-        </Typography>
-        <Typography className={classes.blogTitle} variant="h5" component="h2">
-          {bull}
-          {blogPost.title}
-          {bull}
-        </Typography>
-
         <Typography variant="body2" component="p">
-          {blogPost.body}
+          {conditionalLength(blogPost.body, 80)}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={onClick}
-          text="Learn More"
-        ></Button>
-      </CardActions>
     </Card>
   );
 }

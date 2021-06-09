@@ -3,6 +3,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import React from "react";
 import { getCompNameByCompID, User } from "../UserControl";
+// import "/src/styles/appStyles.scss";
 
 interface Props {
   item: User;
@@ -21,24 +22,30 @@ const TableRowUser: React.FC<Props> = ({ item, openPopup, onDelete }) => {
           <TableCell>{getCompNameByCompID(item.companyID)}</TableCell>
           <TableCell>{item.Position}</TableCell>
           <TableCell>
-            <Button
-              color="primary"
-              onClick={() => {
-                openPopup(item);
-              }}
-            >
-              <EditOutlinedIcon fontSize="small" />
-              Edit
-            </Button>
-            <Button
-              color="secondary"
-              onClick={() => {
-                onDelete(item.ID!);
-              }}
-            >
-              <HighlightOffIcon fontSize="small" />
-              Delete
-            </Button>
+            <ul className="actionList">
+              <li>
+                <button
+                  className="actionButton edit"
+                  onClick={() => {
+                    openPopup(item);
+                  }}
+                >
+                  <EditOutlinedIcon fontSize="small" />
+                  <span>EDIT</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  className="actionButton delete"
+                  onClick={() => {
+                    onDelete(item.ID!);
+                  }}
+                >
+                  <HighlightOffIcon fontSize="small" />
+                  <span>DELETE</span>
+                </button>
+              </li>
+            </ul>
           </TableCell>
         </TableRow>
       )}
