@@ -22,6 +22,7 @@ const blogSlice = createSlice({
   reducers: {
     getBlogsStart: startLoading,
     getBlogs: (state, action: PayloadAction<BlogPost[]>) => {
+      state.blogs = [];
       action.payload.forEach((blogPost) => {
         state.blogs.push(blogPost);
       });

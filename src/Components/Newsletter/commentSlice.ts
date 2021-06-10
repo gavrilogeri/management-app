@@ -19,7 +19,9 @@ const commentSlice = createSlice({
   name: "comments",
   initialState: initialStateBlogs,
   reducers: {
+    getCommentsStart: startLoading,
     getComments(state, action: PayloadAction<Comment[]>) {
+      state.comments = [];
       action.payload.forEach((comment) => {
         state.comments.push(comment);
       });
@@ -30,13 +32,14 @@ const commentSlice = createSlice({
 });
 
 export default commentSlice.reducer;
-export const { getComments } = commentSlice.actions;
+export const { getComments, getCommentsStart } = commentSlice.actions;
 
 export const fetchComments =
   (blogID: number): AppThunk =>
   async (dispatch) => {
     console.log("FETCH COMMENTS CALLED");
     try {
+      dispatch(getCommentsStart());
       const fetchedComments = await getCommentData(blogID);
       if (fetchedComments) {
         dispatch(getComments(fetchedComments));
