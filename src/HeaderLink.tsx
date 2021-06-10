@@ -1,8 +1,6 @@
-import React from "react";
 import { Badge } from "@material-ui/core";
+import React from "react";
 import { NavLink } from "react-router-dom";
-// import useStyles from "./AppStyle";
-import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 interface Props {
   linkAddress: string;

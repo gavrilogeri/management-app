@@ -1,9 +1,12 @@
 @import "blogStyles";
 
 $animate: all 0.2s ease-in;
-
+@media screen and (min-width: 960px) {
+  .header {
+    height: 50px;
+  }
+}
 .header {
-  height: 50px;
   background: $color-mainBlue;
 }
 .headerStyle {

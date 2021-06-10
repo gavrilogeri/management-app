@@ -1,4 +1,3 @@
-import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import CompaniesPage from "./Components/Companies/CompaniesPage";

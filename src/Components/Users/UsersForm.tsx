@@ -99,7 +99,8 @@ export default function UsersForm({
       ...temp,
     });
 
-    if (formValues == values) return Object.values(temp).every((x) => x == "");
+    if (formValues === values)
+      return Object.values(temp).every((x) => x === "");
   };
 
   const resetForm = () => {
@@ -252,7 +253,7 @@ export default function UsersForm({
                 disabled={
                   values.firstName === defaultUserValue.firstName ||
                   values.lastName === defaultUserValue.lastName ||
-                  !Object.values(errors).every((x) => x == "")
+                  !Object.values(errors).every((x) => x === "")
                 }
               />
             </Grid>
