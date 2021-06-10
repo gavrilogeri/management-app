@@ -6,6 +6,7 @@ import Dropdown from "../formComponents/Dropdown";
 import DropdownNative from "../formComponents/DropdownNative";
 import * as UserControl from "../UserControl";
 import { User } from "../UserControl";
+// import "/src/styles/appStyles.scss";
 
 interface Props {
   addOrEdit: (user: User, resetForm: () => void) => void;
@@ -13,6 +14,7 @@ interface Props {
   setOpenForm: Dispatch<SetStateAction<boolean>>;
   setEditableRecord: Dispatch<SetStateAction<User | null>>;
   filterCompanyID?: string;
+  className?: string;
 }
 export default function UsersForm({
   addOrEdit,
@@ -20,6 +22,7 @@ export default function UsersForm({
   setOpenForm,
   setEditableRecord,
   filterCompanyID,
+  className,
 }: Props) {
   const defaultUserValue: User = {
     firstName: "",
@@ -32,28 +35,28 @@ export default function UsersForm({
     ID: "",
   };
 
-  const useStyles = makeStyles((customTheme) => ({
-    root: {
-      "& .MuiFormControl-root": {
-        width: "80%",
-        margin: customTheme.spacing(1),
-      },
-      "&.MuiSelectControl-root": {
-        width: "100px",
-        margin: customTheme.spacing(1),
-      },
-    },
-  }));
+  // const useStyles = makeStyles((customTheme) => ({
+  //   root: {
+  //     "& .MuiFormControl-root": {
+  //       width: "20%",
+  //       margin: customTheme.spacing(1),
+  //     },
+  //     "&.MuiSelectControl-root": {
+  //       width: "100px",
+  //       margin: customTheme.spacing(1),
+  //     },
+  //   },
+  // }));
 
   const [values, setValues] = useState<User>(defaultUserValue);
   const [errors, setErrors] = useState<any>({});
-  const classes = useStyles();
 
   const handleInputChange = (e: React.ChangeEvent<any>): void => {
     setValues({
       ...values,
       [e.target.name]: e.target.value as string,
     });
+    validate({ [e.target.name]: e.target.value });
   };
 
   const validate = (formValues: any = values) => {
@@ -91,7 +94,7 @@ export default function UsersForm({
           ? ""
           : "Date of birth cannot be a future date, nor a date older than 01/01/1930!";
     }
-
+    // debugger;
     setErrors({
       ...temp,
     });
@@ -123,107 +126,139 @@ export default function UsersForm({
     if (editableRecord !== null) {
       setValues({ ...editableRecord });
     }
-  }, [editableRecord]);
+  }, [editableRecord, errors]);
   return (
-    <form className={classes.root} autoComplete="off">
-      <Grid container>
-        <Grid item xs={6}>
-          <TextField
-            variant="outlined"
-            label="First Name"
-            name="firstName"
-            value={values.firstName}
-            onChange={handleInputChange}
-            error={errors.firstName ? true : false}
-            helperText={errors.firstName}
-          />
-          <TextField
-            variant="outlined"
-            label="Last Name"
-            name="lastName"
-            value={values.lastName}
-            onChange={handleInputChange}
-            error={errors.lastName ? true : false}
-            helperText={errors.lastName}
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          {filterCompanyID ? (
-            <DropdownNative
-              labelId="Company Name"
-              name="companyID"
-              value={values.companyID}
+    <div>
+      <form autoComplete="off">
+        <Grid container spacing={2} className="userForm">
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              label="First Name"
+              name="firstName"
+              value={values.firstName}
               onChange={handleInputChange}
-              error={errors.companyID}
-              defaultValue={filterCompanyID}
-              inputProps={UserControl.loadCompanyState()}
+              error={errors.firstName ? true : false}
+              helperText={errors.firstName}
+              size="small"
             />
-          ) : (
-            <DropdownNative
-              labelId="Company Name"
-              name="companyID"
-              value={values.companyID}
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              label="Last Name"
+              name="lastName"
+              value={values.lastName}
               onChange={handleInputChange}
-              error={errors.companyID}
-              inputProps={UserControl.loadCompanyState()}
+              error={errors.lastName ? true : false}
+              helperText={errors.lastName}
+              size="small"
             />
-          )}
-          <TextField
-            id="DOB"
-            name="DOB"
-            label="Date of Birth"
-            type="date"
-            // value={values.DOB}
-            defaultValue={"1970-01-01"}
-            InputProps={{
-              inputProps: {
-                min: "1930-01-01",
-                max: new Date().toISOString().replace(/T.*/, ""),
-              },
-            }}
-            error={errors.DOB ? true : false}
-            helperText={errors.DOB}
-            onChange={handleInputChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          </Grid>
+          <Grid item xs={12}>
+            {filterCompanyID ? (
+              <DropdownNative
+                labelId="Company Name"
+                name="companyID"
+                className="formSelect"
+                value={values.companyID}
+                onChange={handleInputChange}
+                error={errors.companyID}
+                defaultValue={filterCompanyID}
+                inputProps={UserControl.loadCompanyState()}
+              />
+            ) : (
+              <DropdownNative
+                labelId="Company Name"
+                name="companyID"
+                className="formSelect"
+                value={values.companyID}
+                onChange={handleInputChange}
+                error={errors.companyID}
+                inputProps={UserControl.loadCompanyState()}
+                disabled={UserControl.loadCompanyState().length ? false : true}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="DOB"
+              name="DOB"
+              label="Date of Birth"
+              type="date"
+              // value={values.DOB}
+              defaultValue={"1970-01-01"}
+              InputProps={{
+                inputProps: {
+                  min: "1930-01-01",
+                  max: new Date().toISOString().replace(/T.*/, ""),
+                },
+              }}
+              error={errors.DOB ? true : false}
+              helperText={errors.DOB}
+              onChange={handleInputChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Dropdown
+              labelId="Position"
+              name="Position"
+              className="formSelect"
+              value={values.Position}
+              onChange={handleInputChange}
+              error={errors.Position}
+              inputProps={UserControl.getPositions()}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              label="Phone Number"
+              type="number"
+              name="phoneNumber"
+              value={values.phoneNumber}
+              onChange={handleInputChange}
+              error={errors.phoneNumber ? true : false}
+              helperText={errors.phoneNumber}
+              size="small"
+            />
+          </Grid>
+          <hr className="separator" />
+          <Grid container className="formButtons">
+            <Grid item xs={6}>
+              {/* <button className="closeButton">CLOSE</button> */}
+              <Button
+                text="CLOSE"
+                color="secondary"
+                variant="outlined"
+                onClick={closeForm}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {/* <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="submitButton"
+                >
+                  SUBMIT
+                </button> */}
+              <Button
+                type="submit"
+                text="Submit"
+                onClick={handleSubmit}
+                disabled={
+                  values.firstName === defaultUserValue.firstName ||
+                  values.lastName === defaultUserValue.lastName ||
+                  !Object.values(errors).every((x) => x == "")
+                }
+              />
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <Dropdown
-            labelId="Position"
-            name="Position"
-            value={values.Position}
-            onChange={handleInputChange}
-            error={errors.Position}
-            inputProps={UserControl.getPositions()}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            variant="outlined"
-            label="Phone Number"
-            type="number"
-            name="phoneNumber"
-            value={values.phoneNumber}
-            onChange={handleInputChange}
-            error={errors.phoneNumber ? true : false}
-            helperText={errors.phoneNumber}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <Button type="submit" text="Submit" onClick={handleSubmit} />
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            text="CLOSE"
-            color="secondary"
-            variant="outlined"
-            onClick={closeForm}
-          />
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+    </div>
   );
 }

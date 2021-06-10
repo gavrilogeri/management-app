@@ -9,7 +9,7 @@ export const usersHeaderCells: IheaderCells[] = [
   { id: "DOB", label: "Date of Birth" },
   { id: "companyName", label: "Company Name" },
   { id: "position", label: "Position" },
-  { id: "actions", label: "Record Action" },
+  { id: "actions", label: "Action" },
 ];
 
 export const companiesHeaderCells: IheaderCells[] = [
@@ -17,5 +17,5 @@ export const companiesHeaderCells: IheaderCells[] = [
   { id: "City", label: "City" },
   { id: "Country", label: "Country" },
   { id: "usersNumber", label: "No. of Users" },
-  { id: "actions", label: "Record Action" },
+  { id: "actions", label: "Action" },
 ];

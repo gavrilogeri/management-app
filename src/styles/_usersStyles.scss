@@ -1,0 +1,114 @@
+$color-mainBlue: #6f6dfb;
+$color-mainBlueDarker: #8482ff;
+$color-purplishBlue: #706ef9;
+$color-brightBlue: #eef0ff;
+$mainFont: "Roboto", "Helvetica", "Arial", sans-serif;
+
+.tableUsers,
+.tableCompanies {
+  thead th {
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background-color: $color-mainBlue;
+  }
+  tbody td {
+    font-weight: 300;
+  }
+  tbody tr:hover {
+    background-color: $color-brightBlue;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+  padding: 24px;
+}
+.titleAndButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $color-mainBlue;
+}
+
+.actionButton {
+  font-size: 0.8rem;
+  letter-spacing: 0.05rem;
+  border: none;
+  background: none;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  font-family: $mainFont;
+  cursor: pointer;
+}
+
+.actionButton span {
+  overflow: hidden;
+  max-width: 0;
+  transition: 1.2s;
+  display: inline-block;
+}
+
+.actionButton:hover span {
+  max-width: 8rem;
+  transition-delay: 0.4s;
+}
+
+.delete {
+  color: #f5490b;
+}
+
+.edit {
+  color: $color-mainBlue;
+}
+
+.actionList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.newUserButton {
+  color: $color-mainBlue;
+  border: 1px solid $color-mainBlue;
+}
+
+.separator {
+  border-top: 4px solid $color-mainBlue;
+  border-radius: 3px;
+}
+
+.userForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: fit-content;
+}
+.formButtons {
+  align-items: center;
+  justify-content: center;
+}
+.MuiSelect-selectMenu {
+  min-width: 180px;
+  text-align: left;
+}
+.userFormTitle {
+  flex-grow: 1;
+  padding: 15;
+  font-weight: 700;
+  color: $color-mainBlue;
+}
+.submitButton {
+  color: #ffffff;
+  // box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%);
+  background-color: #e0e0e0;
+}
+.MuiTablePagination-select {
+  min-width: 20px;
+}

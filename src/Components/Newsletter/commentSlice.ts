@@ -3,29 +3,43 @@ import axios from "axios";
 import { AppThunk } from "../../store/store";
 import { Comment } from "./PostDetails";
 
-const initialStateBlogs = [] as Comment[];
+interface CommentState {
+  comments: Comment[];
+  isLoading: boolean;
+}
 
+const initialStateBlogs: CommentState = {
+  comments: [],
+  isLoading: false,
+};
+function startLoading(state: CommentState) {
+  state.isLoading = true;
+}
 const commentSlice = createSlice({
   name: "comments",
   initialState: initialStateBlogs,
   reducers: {
+    getCommentsStart: startLoading,
     getComments(state, action: PayloadAction<Comment[]>) {
+      state.comments = [];
       action.payload.forEach((comment) => {
-        state.push(comment);
+        state.comments.push(comment);
       });
+      state.isLoading = false;
       return state;
     },
   },
 });
 
 export default commentSlice.reducer;
-export const { getComments } = commentSlice.actions;
+export const { getComments, getCommentsStart } = commentSlice.actions;
 
 export const fetchComments =
   (blogID: number): AppThunk =>
   async (dispatch) => {
     console.log("FETCH COMMENTS CALLED");
     try {
+      dispatch(getCommentsStart());
       const fetchedComments = await getCommentData(blogID);
       if (fetchedComments) {
         dispatch(getComments(fetchedComments));

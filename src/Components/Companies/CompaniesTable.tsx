@@ -29,20 +29,20 @@ const useStyles = makeStyles((customTheme) => ({
     fontWeight: "bold!important" as any,
     color: customTheme.palette.primary.main,
   },
-  table: {
-    "& thead th": {
-      fontWeight: "700",
-      letterSpacing: "2px",
-      color: "#fff",
-      backgroundColor: customTheme.palette.primary.main,
-    },
-    "& tbody td": {
-      fontWeight: "300",
-    },
-    "& tbody tr:hover": {
-      backgroundColor: "#ebffff",
-    },
-  },
+  // table: {
+  //   "& thead th": {
+  //     fontWeight: "700",
+  //     letterSpacing: "2px",
+  //     color: "#fff",
+  //     backgroundColor: customTheme.palette.primary.main,
+  //   },
+  //   "& tbody td": {
+  //     fontWeight: "300",
+  //   },
+  //   "& tbody tr:hover": {
+  //     backgroundColor: "#ebffff",
+  //   },
+  // },
 }));
 interface Props {
   openPopup: (item: Company, resetForm: void) => void;
@@ -68,7 +68,7 @@ const CompaniesTable: React.FC<Props> = ({
           onClick={openFormAndSetTitle}
         />
         <TableContainer>
-          <Table className={classes.table}>
+          <Table className="tableCompanies">
             <TableHeader headerCells={companiesHeaderCells} />
             <TableBody>
               {companiesState.length !== 0 ? (

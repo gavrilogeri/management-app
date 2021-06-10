@@ -1,0 +1,97 @@
+@import "blogStyles";
+
+$animate: all 0.2s ease-in;
+
+.header {
+  height: 50px;
+  background: $color-mainBlue;
+}
+.headerStyle {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: #ffffff;
+  text-align: center;
+}
+.headerTab {
+  text-align: center;
+}
+.MuiDialog-container {
+  text-align: center;
+}
+
+.logo {
+  text-align: "left";
+  color: #ffffff;
+  font-weight: 700;
+}
+
+body {
+  background: #edf8ff;
+}
+
+.navLink {
+  padding: 10px;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  &:focus {
+    background: $color-mainBlueDarker;
+    transition: $animate;
+  }
+}
+a {
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.15em;
+
+  display: inline-block;
+  // padding: 15px 20px;
+  position: relative;
+}
+a:after {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: #fff;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+a:hover:after {
+  width: 100%;
+  left: 0;
+}
+
+.weatherContainer {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+}
+.weatherButton {
+  background-color: $color-brightBlue;
+  border: none;
+  color: white;
+  // padding: 13px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+}
+
+.weatherIcon {
+  fill: $color-mainBlue;
+}
+.modalHeader {
+  display: flex;
+  align-items: center;
+}

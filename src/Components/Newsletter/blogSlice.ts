@@ -2,44 +2,62 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { AppThunk } from "../../store/store";
 import { BlogPost } from "./NewsletterPage";
-
-const initialStateBlogs = [] as BlogPost[];
+interface BlogsState {
+  blogs: BlogPost[];
+  isLoading: boolean;
+}
+// const initialStateBlogs = [] as BlogPost[];
+const initialStateBlogs: BlogsState = {
+  blogs: [],
+  isLoading: false,
+};
+function startLoading(state: BlogsState) {
+  state.isLoading = true;
+}
 const fetchURL = "https://jsonplaceholder.typicode.com/posts";
+
 const blogSlice = createSlice({
   name: "blogs",
   initialState: initialStateBlogs,
   reducers: {
+    getBlogsStart: startLoading,
     getBlogs: (state, action: PayloadAction<BlogPost[]>) => {
+      state.blogs = [];
       action.payload.forEach((blogPost) => {
-        state.push(blogPost);
+        state.blogs.push(blogPost);
       });
+      state.isLoading = false;
       return state;
     },
     removeBlog: (state, action: PayloadAction<{ postId: number }>) => {
-      let blogForRemove = state.find(
+      let blogForRemove = state.blogs.find(
         (blog) => blog.id === action.payload.postId
       );
 
       if (blogForRemove) {
-        state.splice(state.indexOf(blogForRemove), 1);
+        state.blogs.splice(state.blogs.indexOf(blogForRemove), 1);
       }
     },
     editBlog: (state, action: PayloadAction<BlogPost>) => {
-      let blogForEdit = state.find((blog) => blog.id === action.payload.id);
+      let blogForEdit = state.blogs.find(
+        (blog) => blog.id === action.payload.id
+      );
 
       if (blogForEdit) {
-        state[state.indexOf(blogForEdit)] = action.payload;
+        state.blogs[state.blogs.indexOf(blogForEdit)] = action.payload;
       }
     },
   },
 });
 
 export default blogSlice.reducer;
-export const { getBlogs, removeBlog, editBlog } = blogSlice.actions;
+export const { getBlogs, removeBlog, editBlog, getBlogsStart } =
+  blogSlice.actions;
 
-export const fetchBlogs = (): AppThunk => async (dispatch) => {
+export const fetchBlogs = (): AppThunk => async (dispatch, getState) => {
   console.log("FETCH BLOGS CALLED");
   try {
+    dispatch(getBlogsStart());
     const fetchedBlogPosts = await getBlogData();
     if (fetchedBlogPosts) {
       dispatch(getBlogs(fetchedBlogPosts));
@@ -55,9 +73,7 @@ export const deleteBlog =
   async (dispatch) => {
     console.log("DELETE BLOG CALLED");
     try {
-      const res = await axios.delete(`${fetchURL}/${postId}`, {
-        method: "DELETE",
-      });
+      const res = await axios.delete(`${fetchURL}/${postId}`);
       console.log("succesfully deleted", res);
       dispatch(removeBlog({ postId }));
     } catch (error) {
@@ -71,12 +87,7 @@ export const updateBlog =
     try {
       const res = await axios.put<BlogPost>(
         `${fetchURL}/${blogUpdated.id}`,
-        blogUpdated,
-        {
-          headers: {
-            "Content-Type": "application/json; charset=utf-8",
-          },
-        }
+        blogUpdated
       );
       console.log("succesfully updated", res);
       dispatch(editBlog(blogUpdated));

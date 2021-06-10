@@ -20,7 +20,7 @@ export default function DropdownNative(props: SelectProps) {
     inputProps,
     defaultValue,
     error = null,
-    ...other
+    disabled,
   } = props;
 
   return (
@@ -32,6 +32,7 @@ export default function DropdownNative(props: SelectProps) {
         value={value}
         onChange={onChange}
         defaultValue={defaultValue}
+        disabled={disabled}
       >
         {inputProps?.map((item: Company) => (
           <MenuItem key={item.ID} value={item.ID}>
