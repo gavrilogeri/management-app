@@ -9,15 +9,7 @@ import {
 import React from "react";
 
 export default function Dropdown(props: SelectProps) {
-  const {
-    name,
-    labelId,
-    value,
-    onChange,
-    inputProps,
-    error = null,
-    ...other
-  } = props;
+  const { name, labelId, value, onChange, inputProps, error = null } = props;
 
   return (
     <FormControl {...(error && { error: true })}>

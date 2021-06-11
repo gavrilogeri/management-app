@@ -53,9 +53,6 @@ function CompaniesForm({
     city: "",
     country: "",
   };
-  // const filteredUsers = UserControl.getUsers().filter(
-  //   (item: UserControl.User) => item.companyID !== values.ID
-  // );
 
   const validate = (formValues: any = values) => {
     let temp: any = { ...errors };
@@ -70,11 +67,11 @@ function CompaniesForm({
       ...temp,
     });
 
-    if (formValues == values) return Object.values(temp).every((x) => x == "");
+    if (formValues === values)
+      return Object.values(temp).every((x) => x === "");
   };
 
   const [values, setValues] = useState<Company>(defaultCompanyValue);
-  // const [filtered, setFiltered] = useState<UserControl.User[]>(users);
 
   const handleInputChange = (e: React.ChangeEvent<any>): void => {
     setValues({
@@ -100,10 +97,6 @@ function CompaniesForm({
   useEffect(() => {
     if (editableRecord !== null) {
       setValues({ ...editableRecord });
-      // const filterUsers = users.filter(
-      //   (item: UserControl.User) => item.companyID === editableRecord.ID
-      // );
-      // setFiltered(filterUsers);
     }
   }, [editableRecord, openForm]);
   const closeForm = () => {

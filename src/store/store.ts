@@ -1,10 +1,10 @@
-import { configureStore, Action } from "@reduxjs/toolkit";
+import { Action, configureStore } from "@reduxjs/toolkit";
+import { ThunkAction } from "redux-thunk";
 import companiesReducer from "../Components/Companies/companiesSlice";
-import usersReducer from "../Components/Users/usersSlice";
 import blogReducer from "../Components/Newsletter/blogSlice";
 import commentReducer from "../Components/Newsletter/commentSlice";
-import { loadCompanyState, saveState, User } from "../Components/UserControl";
-import { ThunkAction } from "redux-thunk";
+import { saveState } from "../Components/UserControl";
+import usersReducer from "../Components/Users/usersSlice";
 // ...
 // const persistedState = loadState();
 export const store = configureStore({

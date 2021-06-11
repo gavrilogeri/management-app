@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Company, getAllCompanies, uuidv4 } from "../UserControl";
-import { loadCompanyState, saveState } from "../UserControl";
+import { Company, loadCompanyState, uuidv4 } from "../UserControl";
 
 //TODO make a slice for some company states
 

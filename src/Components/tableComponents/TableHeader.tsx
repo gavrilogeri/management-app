@@ -1,5 +1,5 @@
 import { IheaderCells } from "../../helpers";
-import { TableCell, TableHead } from "@material-ui/core";
+import { TableCell, TableHead, TableRow } from "@material-ui/core";
 
 interface Props {
   headerCells: IheaderCells[];
@@ -7,9 +7,11 @@ interface Props {
 const TableHeader: React.FC<Props> = ({ headerCells }) => {
   return (
     <TableHead>
-      {headerCells.map((headerCells) => (
-        <TableCell key={headerCells.id}>{headerCells.label}</TableCell>
-      ))}
+      <TableRow>
+        {headerCells.map((headerCells) => (
+          <TableCell key={headerCells.id}>{headerCells.label}</TableCell>
+        ))}
+      </TableRow>
     </TableHead>
   );
 };

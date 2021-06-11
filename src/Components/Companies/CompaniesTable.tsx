@@ -77,6 +77,7 @@ const CompaniesTable: React.FC<Props> = ({
                     item={item}
                     openPopup={openPopup}
                     onDelete={onDelete}
+                    key={item.ID}
                   />
                 ))
               ) : (

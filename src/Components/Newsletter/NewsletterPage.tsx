@@ -1,4 +1,4 @@
-import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
@@ -34,14 +34,14 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
 };
 const fetchURL = "https://jsonplaceholder.typicode.com/posts";
 
-function NewsletterPage(props: Props) {
+function NewsletterPage({ onFetchBlogs, ...props }: Props) {
   const [openForm, setOpenForm] = useState(false);
   const [popupTitle, setPopupTitle] = useState<string>("");
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost>();
 
   useEffect(() => {
     // getData();
-    props.onFetchBlogs();
+    onFetchBlogs();
   }, []);
 
   const openPopup = (item: BlogPost): void => {

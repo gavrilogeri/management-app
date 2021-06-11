@@ -1,4 +1,3 @@
-import userEvent from "@testing-library/user-event";
 import Position from "./Position";
 
 export interface User {
@@ -39,18 +38,9 @@ export const getPositions = () => [
   },
 ];
 
-type keys = {
-  users: string | null;
-  userID: string;
-};
-
 const keys = {
   users: "users",
   userID: "userID",
-};
-type keysCompany = {
-  companies: string | null;
-  companyID: string;
 };
 
 const keysCompany = {
@@ -167,7 +157,7 @@ export function uuidv4() {
 }
 
 export function getUsers(): User[] {
-  if (localStorage.getItem(keys.users) == null)
+  if (localStorage.getItem(keys.users) === null)
     localStorage.setItem(keys.users, JSON.stringify([]));
 
   return JSON.parse(localStorage.getItem(keys.users) as string);
@@ -203,12 +193,12 @@ export function updateCompany(data: Company) {
 
 export function deleteUser(id: string) {
   let userList: User[] = getUsers();
-  userList = userList.filter((x) => x.ID != id);
+  userList = userList.filter((x) => x.ID !== id);
   localStorage.setItem(keys.users, JSON.stringify(userList));
 }
 
 export function deleteCompany(id: string) {
   let companyList: Company[] = getAllCompanies();
-  companyList = companyList.filter((x) => x.ID != id);
+  companyList = companyList.filter((x) => x.ID !== id);
   localStorage.setItem(keysCompany.companies, JSON.stringify(companyList));
 }

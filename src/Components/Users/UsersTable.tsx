@@ -141,6 +141,7 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
                         item={item}
                         openPopup={openPopup}
                         onDelete={onDelete}
+                        key={item.ID}
                       />
                     ))
                 ) : (
@@ -149,6 +150,7 @@ const UsersTable: React.FC<Props & DispatchProps> = ({
                       item={item}
                       openPopup={openPopup}
                       onDelete={onDelete}
+                      key={item.ID}
                     />
                   ))
                 )
