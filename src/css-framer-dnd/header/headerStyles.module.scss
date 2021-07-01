@@ -1,0 +1,57 @@
+@import "../helper-styles.scss";
+
+.header {
+  background: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  height: 20vh;
+
+  & > * {
+    margin: 2rem 1.5rem;
+    display: flex;
+  }
+  .dateAndTime {
+    display: flex;
+    flex-direction: column;
+    min-width: 12vw;
+    margin-left: 50px;
+
+    .profileImg {
+      width: 3rem;
+      // align-self: flex-start;
+      border: 1px solid $color-bodyDarkGrey;
+      border-radius: 50%;
+    }
+    .date {
+      font-weight: bold;
+      font-size: 14px;
+      padding-top: 1em;
+    }
+    .time {
+      font-size: 12px;
+      color: $color-greyFont;
+      padding-top: 0.5em;
+    }
+  }
+  .welcome {
+    flex-grow: 1;
+    align-items: center;
+    font-size: 1.5em;
+    // margin: 2em 1.5em;
+  }
+  .logo {
+    max-width: 2em;
+    padding-right: 0.5em;
+  }
+  .search {
+    display: flex;
+    align-items: center;
+  }
+  .form {
+    input {
+      width: 16em;
+    }
+  }
+}

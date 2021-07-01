@@ -7,6 +7,7 @@ import { StylesProvider } from "@material-ui/core/styles";
 // import customTheme from "./CustomTheme";
 import Header from "./Header";
 import "./styles/appStyle.scss";
+import NewsCardApp from "./css-framer-dnd/NewsCardApp";
 const App: React.FC = () => {
   return (
     <div>
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/" exact component={UsersPage} />
           <Route path="/companies" exact component={CompaniesPage} />
           <Route path="/newsletter" exact component={NewsletterPage} />
+          <Route path="/news" exact component={NewsCardApp} />
         </BrowserRouter>
         {/* <UsersPage /> */}
       </StylesProvider>
