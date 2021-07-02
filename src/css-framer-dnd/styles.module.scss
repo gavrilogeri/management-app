@@ -102,8 +102,7 @@ input {
         flex-direction: column;
         justify-content: space-around;
         padding: 1.5em;
-        // flex: 1 0 100%;
-        .updates {
+        > div:first-of-type {
           background: $color-bodyLightGrey;
           display: flex;
           flex-direction: row;

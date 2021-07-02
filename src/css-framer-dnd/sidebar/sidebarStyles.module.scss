@@ -6,7 +6,7 @@
   justify-content: space-between;
   align-items: stretch;
   min-width: 14vw;
-  background: #ffffff;
+  background: $color-white;
   padding: 0 30px 50px 50px;
 
   .menuContainer {
@@ -35,7 +35,7 @@
         .active .sidebarIcon {
           background: $color-Blue;
           path {
-            color: #ffffff !important;
+            color: $color-white !important;
           }
         }
         .active:hover {
@@ -62,7 +62,7 @@
     flex-direction: row;
     justify-content: space-around;
     padding: 1.5em 1em;
-    color: #ffffff;
+    color: $color-white;
     font-size: $card-font-size-text;
 
     & :first-child {
@@ -76,11 +76,11 @@
       }
       button {
         background: #2c53ee;
-        color: #ffffff;
+        color: $color-white;
         border: none;
         border-radius: 0.5em;
         width: 100%;
-        font-size: 11px;
+        font-size: $card-font-size-description;
         margin-top: 1em;
         padding: 0.5em;
       }

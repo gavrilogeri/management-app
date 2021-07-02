@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import building from "../images/building-4781384_640.jpg";
+import stan from "../images/Stan-marsh-0.png";
 import styles from "../styles.module.scss";
 
 interface Props {
@@ -35,6 +36,7 @@ const FlipCard: React.FC<Props> = ({ canDrag }) => {
                 architecture
               </h3>
               <div>
+                <img src={stan} />
                 <div>
                   <span className={styles["card-text"]}>Tony Roseville</span>
                   <span className={styles["card-description"]}>

@@ -73,7 +73,7 @@ const NewsCardApp = () => {
                   : {}),
               }}
             >
-              <div className={styles.updates}>
+              <div>
                 <FileTextOutlined className={styles.textIcon} />
                 <div>
                   <span className={styles["card-text"]}>Tuseday Capsule</span>
