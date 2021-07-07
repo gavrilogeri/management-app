@@ -4,6 +4,7 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import PeopleIcon from "@material-ui/icons/People";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 import React from "react";
 import Coords from "./Coords";
 import HeaderLink from "./HeaderLink";
@@ -26,7 +27,7 @@ const Header: React.FC = () => {
             alignItems="center"
             spacing={5}
           >
-            <Grid item xs={12} md={4} className="logo">
+            <Grid item xs={12} md={3} className="logo">
               <h1> MANAGEMENT APP </h1>
             </Grid>
             <Grid item xs={12} md={2}>
@@ -48,6 +49,13 @@ const Header: React.FC = () => {
                 icon={<MenuBookIcon fontSize="small" />}
                 linkAddress="/newsletter"
                 linkTitle="Newsletter"
+              />
+            </Grid>
+            <Grid item xs={12} md={1}>
+              <HeaderLink
+                icon={<AnnouncementIcon fontSize="small" />}
+                linkAddress="/news"
+                linkTitle="News"
               />
             </Grid>
             <Grid item xs={12} md={2}>
